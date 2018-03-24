@@ -7,6 +7,7 @@ use Innmind\Ark\{
     InstallationArray,
     Installation,
     Installation\Name,
+    Forge\Ovh\Available,
 };
 use Innmind\Url\Url;
 use Innmind\Immutable\Set;
@@ -15,11 +16,13 @@ use Ovh\Api;
 final class Ovh implements InstallationArray
 {
     private $api;
+    private $available;
     private $names;
 
-    public function __construct(Api $api)
+    public function __construct(Api $api, Available $available)
     {
         $this->api = $api;
+        $this->available = $available;
     }
 
     public function current(): Installation
@@ -38,7 +41,6 @@ final class Ovh implements InstallationArray
     public function next(): void
     {
         $this->names()->next();
-        //todo: filter only the installed servers
     }
 
     public function rewind(): void
@@ -56,6 +58,8 @@ final class Ovh implements InstallationArray
         return $this->names ?? $this->names = Set::of(
             'string',
             ...$this->api->get('/vps')
-        );
+        )->filter(function(string $name): bool {
+            return !($this->available)(new Name($name));
+        });
     }
 }
