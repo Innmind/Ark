@@ -20,6 +20,9 @@ use Ovh\Api;
 final class Ovh implements Forge
 {
     private $api;
+    private $available;
+    private $bootstrap;
+    private $dispose;
 
     public function __construct(
         Api $api,
