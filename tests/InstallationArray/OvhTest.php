@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Ark\InstallationArray;
 
 use Innmind\Ark\{
-    InstallationArray\OVH,
+    InstallationArray\Ovh,
     InstallationArray,
     Installation,
     Installation\Name,
@@ -12,7 +12,7 @@ use Innmind\Ark\{
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 
-class OVHTest extends TestCase
+class OvhTest extends TestCase
 {
     private $api;
 
@@ -23,12 +23,12 @@ class OVHTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(InstallationArray::class, new OVH($this->api));
+        $this->assertInstanceOf(InstallationArray::class, new Ovh($this->api));
     }
 
     public function testIterator()
     {
-        $ovh = new OVH($this->api);
+        $ovh = new Ovh($this->api);
         $this
             ->api
             ->expects($this->exactly(2))

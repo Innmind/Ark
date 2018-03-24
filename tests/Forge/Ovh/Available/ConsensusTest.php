@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Ark\Forge\OVH\Available;
+namespace Tests\Innmind\Ark\Forge\Ovh\Available;
 
 use Innmind\Ark\{
-    Forge\OVH\Available\Consensus,
-    Forge\OVH\Available,
+    Forge\Ovh\Available\Consensus,
+    Forge\Ovh\Available,
     Installation\Name,
 };
 use PHPUnit\Framework\TestCase;

@@ -5,9 +5,9 @@ namespace Innmind\Ark\Forge;
 
 use Innmind\Ark\{
     Forge,
-    Forge\OVH\Available,
-    Forge\OVH\Bootstrap,
-    Forge\OVH\Dispose,
+    Forge\Ovh\Available,
+    Forge\Ovh\Bootstrap,
+    Forge\Ovh\Dispose,
     Installation,
     Installation\Name,
     Exception\RuntimeException,
@@ -17,7 +17,7 @@ use Innmind\Url\Url;
 use Innmind\Immutable\Set;
 use Ovh\Api;
 
-final class OVH implements Forge
+final class Ovh implements Forge
 {
     private $api;
 

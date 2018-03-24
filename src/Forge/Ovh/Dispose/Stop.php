@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Ark\Forge\OVH\Dispose;
+namespace Innmind\Ark\Forge\Ovh\Dispose;
 
 use Innmind\Ark\{
-    Forge\OVH\Dispose,
+    Forge\Ovh\Dispose,
     Installation\Name,
 };
 use Ovh\Api;

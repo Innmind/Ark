@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Ark\Forge\OVH;
+namespace Tests\Innmind\Ark\Forge\Ovh;
 
 use Innmind\Ark\{
-    Forge\OVH\Template,
+    Forge\Ovh\Template,
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;

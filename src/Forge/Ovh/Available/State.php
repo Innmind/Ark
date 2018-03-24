@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Ark\Forge\OVH\Available;
+namespace Innmind\Ark\Forge\Ovh\Available;
 
 use Innmind\Ark\{
-    Forge\OVH\Available,
+    Forge\Ovh\Available,
     Installation\Name,
 };
 use Ovh\Api;

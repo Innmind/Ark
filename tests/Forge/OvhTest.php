@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Ark\Forge;
 
 use Innmind\Ark\{
-    Forge\OVH,
+    Forge\Ovh,
     Forge,
-    Forge\OVH\Available,
-    Forge\OVH\Bootstrap,
-    Forge\OVH\Dispose,
+    Forge\Ovh\Available,
+    Forge\Ovh\Bootstrap,
+    Forge\Ovh\Dispose,
     Installation,
     Installation\Name,
     Exception\RuntimeException,
@@ -24,7 +24,7 @@ class OVHTest extends TestCase
     {
         $this->assertInstanceOf(
             Forge::class,
-            new OVH(
+            new Ovh(
                 $this->createMock(Api::class),
                 $this->createMock(Available::class),
                 $this->createMock(Bootstrap::class),
@@ -35,7 +35,7 @@ class OVHTest extends TestCase
 
     public function testNew()
     {
-        $forge = new OVH(
+        $forge = new Ovh(
             $api = $this->createMock(Api::class),
             $available = $this->createMock(Available::class),
             $bootstrap = $this->createMock(Bootstrap::class),
@@ -80,7 +80,7 @@ class OVHTest extends TestCase
 
     public function testThrowWhenNoServer()
     {
-        $forge = new OVH(
+        $forge = new Ovh(
             $api = $this->createMock(Api::class),
             $available = $this->createMock(Available::class),
             $bootstrap = $this->createMock(Bootstrap::class),
@@ -105,7 +105,7 @@ class OVHTest extends TestCase
 
     public function testThrowWhenNoServerAvailable()
     {
-        $forge = new OVH(
+        $forge = new Ovh(
             $api = $this->createMock(Api::class),
             $available = $this->createMock(Available::class),
             $bootstrap = $this->createMock(Bootstrap::class),
@@ -131,7 +131,7 @@ class OVHTest extends TestCase
 
     public function testDispose()
     {
-        $forge = new OVH(
+        $forge = new Ovh(
             $this->createMock(Api::class),
             $this->createMock(Available::class),
             $this->createMock(Bootstrap::class),

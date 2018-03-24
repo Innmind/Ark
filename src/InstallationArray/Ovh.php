@@ -12,7 +12,7 @@ use Innmind\Url\Url;
 use Innmind\Immutable\Set;
 use Ovh\Api;
 
-final class OVH implements InstallationArray
+final class Ovh implements InstallationArray
 {
     private $api;
     private $names;

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Ark\Forge\OVH\Bootstrap;
+namespace Tests\Innmind\Ark\Forge\Ovh\Bootstrap;
 
 use Innmind\Ark\{
-    Forge\OVH\Bootstrap\Reinstall,
-    Forge\OVH\Bootstrap,
-    Forge\OVH\Template,
+    Forge\Ovh\Bootstrap\Reinstall,
+    Forge\Ovh\Bootstrap,
+    Forge\Ovh\Template,
     Installation\Name,
     Exception\BootstrapFailed,
 };
