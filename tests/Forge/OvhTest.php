@@ -75,7 +75,7 @@ class OVHTest extends TestCase
 
         $this->assertInstanceOf(Installation::class, $installation);
         $this->assertSame('baz', (string) $installation->name());
-        $this->assertSame('baz', (string) $installation->url());
+        $this->assertSame('baz', (string) $installation->location());
     }
 
     public function testThrowWhenNoServer()

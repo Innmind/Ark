@@ -9,12 +9,12 @@ use Innmind\Url\UrlInterface;
 final class Installation
 {
     private $name;
-    private $url;
+    private $location;
 
-    public function __construct(Name $name, UrlInterface $url)
+    public function __construct(Name $name, UrlInterface $location)
     {
         $this->name = $name;
-        $this->url = $url;
+        $this->location = $location;
     }
 
     public function name(): Name
@@ -22,8 +22,8 @@ final class Installation
         return $this->name;
     }
 
-    public function url(): UrlInterface
+    public function location(): UrlInterface
     {
-        return $this->url;
+        return $this->location;
     }
 }

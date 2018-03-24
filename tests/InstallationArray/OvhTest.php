@@ -44,7 +44,7 @@ class OvhTest extends TestCase
         $this->assertInstanceOf(Name::class, $ovh->key());
         $this->assertSame('vps42.ovh.net', (string) $ovh->key());
         $this->assertSame('vps42.ovh.net', (string) $ovh->current()->name());
-        $this->assertSame('vps42.ovh.net', (string) $ovh->current()->url());
+        $this->assertSame('vps42.ovh.net', (string) $ovh->current()->location());
         $this->assertTrue($ovh->valid());
         $this->assertNull($ovh->next());
         $this->assertSame('vps43.ovh.net', (string) $ovh->key());

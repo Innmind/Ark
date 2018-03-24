@@ -20,6 +20,6 @@ class InstallationTest extends TestCase
         );
 
         $this->assertSame($name, $installation->name());
-        $this->assertSame($url, $installation->url());
+        $this->assertSame($url, $installation->location());
     }
 }
