@@ -53,6 +53,11 @@ final class Ovh implements InstallationArray
         return $this->names()->valid();
     }
 
+    public function count(): int
+    {
+        return $this->names()->size();
+    }
+
     private function names(): Set
     {
         return $this->names ?? $this->names = Set::of(
