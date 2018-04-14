@@ -5,7 +5,6 @@ namespace Innmind\Ark\Forge\Ovh\Bootstrap;
 
 use Innmind\Ark\{
     Forge\Ovh\Bootstrap,
-    Forge\Ovh\Template,
     Installation\Name,
     Exception\BootstrapFailed,
 };
@@ -21,18 +20,15 @@ final class Reinstall implements Bootstrap
 {
     private $api;
     private $server;
-    private $template;
     private $sshFolder;
 
     public function __construct(
         Api $api,
         Server $server,
-        Template $template,
         PathInterface $sshFolder
     ) {
         $this->api = $api;
         $this->server = $server;
-        $this->template = $template;
         $this->sshFolder = $sshFolder;
     }
 
@@ -44,10 +40,11 @@ final class Reinstall implements Bootstrap
             'key' => $sshKey,
             'keyName' => (string) $name,
         ]);
+        $template = $this->api->get('/vps/'.$name.'/distribution')['id'];
         try {
             $this->api->post('/vps/'.$name.'/reinstall', [
                 'doNotSendPassword' => true,
-                'templateId' => $this->template->toInt(),
+                'templateId' => $template,
                 'sshKey' => [(string) $name],
             ]);
 
