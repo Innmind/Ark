@@ -34,12 +34,13 @@ $container = (new ContainerBuilder)(
     new Path('container.yml'),
     (new Map('string', 'mixed'))
         ->put('api', new Api(/* args */))
-        ->put('sshFolder', '/home/{serverUser}/.ssh')
+        ->put('sshFolder', new Path('/home/{serverUser}/.ssh'))
 );
 
-$installation = $forge->new();
+$ark = $container->get('ark');
+$installation = $ark->forge()->new();
 $installAppOn($installation->location());
-$installation->array(); // will contain the new server now
+$ark->array(); // will contain the new server now
 ```
 
 You can refer to the [ovh documentation](https://api.ovh.com/g934.first_step_with_api) to know how you can generate the tokens needed to build the `Api` object.
