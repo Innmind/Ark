@@ -25,7 +25,6 @@ composer require innmind/ark
 The very first step is to buy vps servers from [ovh](https://www.ovh.com/fr/vps/), then you can start writing this kind of code:
 
 ```php
-use Innmind\Ark\Forge\Ovh\Template;
 use Innmind\Compose\ContainerBuilder\ContainerBuilder;
 use Innmind\Url\Path;
 use Innmind\Immutable\Map;
@@ -35,13 +34,13 @@ $container = (new ContainerBuilder)(
     new Path('container.yml'),
     (new Map('string', 'mixed'))
         ->put('api', new Api(/* args */))
-        ->put('template', new Template($someTemplateId))
-        ->put('sshFolder', '/home/{serverUser}/.ssh')
+        ->put('sshFolder', new Path('/home/{serverUser}/.ssh'))
 );
 
-$installation = $forge->new();
+$ark = $container->get('ark');
+$installation = $ark->forge()->new();
 $installAppOn($installation->location());
-$installation->array(); // will contain the new server now
+$ark->array(); // will contain the new server now
 ```
 
 You can refer to the [ovh documentation](https://api.ovh.com/g934.first_step_with_api) to know how you can generate the tokens needed to build the `Api` object.

@@ -5,7 +5,6 @@ namespace Innmind\Ark\Forge\Ovh\Bootstrap;
 
 use Innmind\Ark\{
     Forge\Ovh\Bootstrap,
-    Forge\Ovh\Template,
     Installation\Name,
     Exception\BootstrapFailed,
 };
@@ -14,25 +13,21 @@ use Innmind\Server\Control\{
     Server\Command,
 };
 use Innmind\Url\PathInterface;
-use Innmind\Immutable\Set;
 use Ovh\Api;
 
 final class Reinstall implements Bootstrap
 {
     private $api;
     private $server;
-    private $template;
     private $sshFolder;
 
     public function __construct(
         Api $api,
         Server $server,
-        Template $template,
         PathInterface $sshFolder
     ) {
         $this->api = $api;
         $this->server = $server;
-        $this->template = $template;
         $this->sshFolder = $sshFolder;
     }
 
@@ -44,14 +39,15 @@ final class Reinstall implements Bootstrap
             'key' => $sshKey,
             'keyName' => (string) $name,
         ]);
+        $template = $this->api->get('/vps/'.$name.'/distribution')['id'];
         try {
-            $this->api->post('/vps/'.$name.'/reinstall', [
+            $task = $this->api->post('/vps/'.$name.'/reinstall', [
                 'doNotSendPassword' => true,
-                'templateId' => $this->template->toInt(),
+                'templateId' => $template,
                 'sshKey' => [(string) $name],
             ]);
 
-            $this->wait($name);
+            $this->wait($name, $task['id']);
         } finally {
             $this->api->delete('/me/sshKey/'.$name);
         }
@@ -89,28 +85,16 @@ final class Reinstall implements Bootstrap
         return $this->generateSshKey();
     }
 
-    private function wait(Name $name): void
+    private function wait(Name $name, int $id): void
     {
         do {
             sleep(1);
 
-            $tasks = $this->api->get('/vps/'.$name.'/tasks', ['type' => 'reinstallVm']);
+            $task = $this->api->get('/vps/'.$name.'/tasks/'.$id);
 
-            $done = Set::of('mixed', ...$tasks)
-                ->map(function(int $task) use ($name): array {
-                    return $this->api->get('/vps/'.$name.'/tasks/'.$task);
-                })
-                ->foreach(static function(array $task) use ($name): void {
-                    if (in_array($task['state'], ['error', 'cancelled'], true)) {
-                        throw new BootstrapFailed((string) $name);
-                    }
-                })
-                ->reduce(
-                    true,
-                    static function(bool $done, array $task): bool {
-                        return $done && $task['state'] === 'done';
-                    }
-                );
-        } while (!$done);
+            if (in_array($task['state'], ['error', 'cancelled'], true)) {
+                throw new BootstrapFailed((string) $name);
+            }
+        } while ($task['state'] !== 'done');
     }
 }

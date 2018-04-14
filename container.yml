@@ -1,6 +1,5 @@
 arguments:
     api: Ovh\Api
-    template: Innmind\Ark\Forge\Ovh\Template
     sshFolder: Innmind\Url\PathInterface
     server: Innmind\Server\Control\Server ?? $defaultServer
 
@@ -25,7 +24,6 @@ services:
         bootstrap Innmind\Ark\Forge\Ovh\Bootstrap\Reinstall:
             - $api
             - $server
-            - $template
             - $sshFolder
 
         dispose Innmind\Ark\Forge\Ovh\Dispose\Stop:

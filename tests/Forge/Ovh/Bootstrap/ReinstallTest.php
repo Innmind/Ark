@@ -6,7 +6,6 @@ namespace Tests\Innmind\Ark\Forge\Ovh\Bootstrap;
 use Innmind\Ark\{
     Forge\Ovh\Bootstrap\Reinstall,
     Forge\Ovh\Bootstrap,
-    Forge\Ovh\Template,
     Installation\Name,
     Exception\BootstrapFailed,
 };
@@ -30,7 +29,6 @@ class ReinstallTest extends TestCase
             new Reinstall(
                 $this->createMock(Api::class),
                 $this->createMock(Server::class),
-                new Template(42),
                 new Path('.ssh')
             )
         );
@@ -41,7 +39,6 @@ class ReinstallTest extends TestCase
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Template(143979),
             new Path('/home/user/.ssh')
         );
         $server
@@ -83,6 +80,27 @@ class ReinstallTest extends TestCase
             );
         $api
             ->expects($this->at(1))
+            ->method('get')
+            ->with('/vps/foo/distribution')
+            ->willReturn([
+                'bitFormat' => 64,
+                'name' => 'Debian 9 (Stretch)',
+                'id' => 143979,
+                'locale' => 'en',
+                'availableLanguage' => [
+                    'en',
+                    'fr',
+                    'es',
+                    'de',
+                    'pl',
+                    'pt',
+                    'it',
+                    'nl'
+                ],
+                'distribution' => 'debian9'
+            ]);
+        $api
+            ->expects($this->at(2))
             ->method('post')
             ->with(
                 '/vps/foo/reinstall',
@@ -91,45 +109,25 @@ class ReinstallTest extends TestCase
                     'templateId' => 143979,
                     'sshKey' => ['foo'],
                 ]
-            );
-        $api
-            ->expects($this->at(2))
-            ->method('get')
-            ->with(
-                '/vps/foo/tasks',
-                ['type' => 'reinstallVm']
             )
-            ->willReturn([24, 42]);
+            ->willReturn([
+                'progress' => 0,
+                'id' => 42,
+                'type' => 'reinstallVm',
+                'state' => 'todo',
+            ]);
         $api
             ->expects($this->at(3))
-            ->method('get')
-            ->with('/vps/foo/tasks/24')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(4))
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn(['state' => 'doing']);
         $api
-            ->expects($this->at(5))
-            ->method('get')
-            ->with(
-                '/vps/foo/tasks',
-                ['type' => 'reinstallVm']
-            )
-            ->willReturn([24, 42]);
-        $api
-            ->expects($this->at(6))
-            ->method('get')
-            ->with('/vps/foo/tasks/24')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(7))
+            ->expects($this->at(4))
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn(['state' => 'done']);
         $api
-            ->expects($this->at(8))
+            ->expects($this->at(5))
             ->method('delete')
             ->with('/me/sshKey/foo');
 
@@ -141,7 +139,6 @@ class ReinstallTest extends TestCase
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Template(143979),
             new Path('/home/user/.ssh')
         );
         $server
@@ -211,6 +208,27 @@ class ReinstallTest extends TestCase
             );
         $api
             ->expects($this->at(1))
+            ->method('get')
+            ->with('/vps/foo/distribution')
+            ->willReturn([
+                'bitFormat' => 64,
+                'name' => 'Debian 9 (Stretch)',
+                'id' => 143979,
+                'locale' => 'en',
+                'availableLanguage' => [
+                    'en',
+                    'fr',
+                    'es',
+                    'de',
+                    'pl',
+                    'pt',
+                    'it',
+                    'nl'
+                ],
+                'distribution' => 'debian9'
+            ]);
+        $api
+            ->expects($this->at(2))
             ->method('post')
             ->with(
                 '/vps/foo/reinstall',
@@ -219,57 +237,36 @@ class ReinstallTest extends TestCase
                     'templateId' => 143979,
                     'sshKey' => ['foo'],
                 ]
-            );
-        $api
-            ->expects($this->at(2))
-            ->method('get')
-            ->with(
-                '/vps/foo/tasks',
-                ['type' => 'reinstallVm']
             )
-            ->willReturn([24, 42]);
+            ->willReturn([
+                'progress' => 0,
+                'id' => 42,
+                'type' => 'reinstallVm',
+                'state' => 'todo',
+            ]);
         $api
             ->expects($this->at(3))
-            ->method('get')
-            ->with('/vps/foo/tasks/24')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(4))
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn(['state' => 'doing']);
         $api
-            ->expects($this->at(5))
-            ->method('get')
-            ->with(
-                '/vps/foo/tasks',
-                ['type' => 'reinstallVm']
-            )
-            ->willReturn([24, 42]);
-        $api
-            ->expects($this->at(6))
-            ->method('get')
-            ->with('/vps/foo/tasks/24')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(7))
+            ->expects($this->at(4))
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn(['state' => 'done']);
         $api
-            ->expects($this->at(8))
+            ->expects($this->at(5))
             ->method('delete')
             ->with('/me/sshKey/foo');
 
         $this->assertNull($reinstall(new Name('foo')));
     }
 
-    public function testThrowWhenOneTaskFailed()
+    public function testThrowWhenTaskFailed()
     {
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Template(143979),
             new Path('/home/user/.ssh')
         );
         $server
@@ -311,6 +308,27 @@ class ReinstallTest extends TestCase
             );
         $api
             ->expects($this->at(1))
+            ->method('get')
+            ->with('/vps/foo/distribution')
+            ->willReturn([
+                'bitFormat' => 64,
+                'name' => 'Debian 9 (Stretch)',
+                'id' => 143979,
+                'locale' => 'en',
+                'availableLanguage' => [
+                    'en',
+                    'fr',
+                    'es',
+                    'de',
+                    'pl',
+                    'pt',
+                    'it',
+                    'nl'
+                ],
+                'distribution' => 'debian9'
+            ]);
+        $api
+            ->expects($this->at(2))
             ->method('post')
             ->with(
                 '/vps/foo/reinstall',
@@ -319,27 +337,20 @@ class ReinstallTest extends TestCase
                     'templateId' => 143979,
                     'sshKey' => ['foo'],
                 ]
-            );
-        $api
-            ->expects($this->at(2))
-            ->method('get')
-            ->with(
-                '/vps/foo/tasks',
-                ['type' => 'reinstallVm']
             )
-            ->willReturn([24, 42]);
+            ->willReturn([
+                'progress' => 0,
+                'id' => 42,
+                'type' => 'reinstallVm',
+                'state' => 'todo',
+            ]);
         $api
             ->expects($this->at(3))
-            ->method('get')
-            ->with('/vps/foo/tasks/24')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(4))
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn(['state' => 'error']);
         $api
-            ->expects($this->at(5))
+            ->expects($this->at(4))
             ->method('delete')
             ->with('/me/sshKey/foo');
 
@@ -349,12 +360,11 @@ class ReinstallTest extends TestCase
         $reinstall(new Name('foo'));
     }
 
-    public function testThrowWhenOneTaskCancelled()
+    public function testThrowWhenTaskCancelled()
     {
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Template(143979),
             new Path('/home/user/.ssh')
         );
         $server
@@ -396,6 +406,27 @@ class ReinstallTest extends TestCase
             );
         $api
             ->expects($this->at(1))
+            ->method('get')
+            ->with('/vps/foo/distribution')
+            ->willReturn([
+                'bitFormat' => 64,
+                'name' => 'Debian 9 (Stretch)',
+                'id' => 143979,
+                'locale' => 'en',
+                'availableLanguage' => [
+                    'en',
+                    'fr',
+                    'es',
+                    'de',
+                    'pl',
+                    'pt',
+                    'it',
+                    'nl'
+                ],
+                'distribution' => 'debian9'
+            ]);
+        $api
+            ->expects($this->at(2))
             ->method('post')
             ->with(
                 '/vps/foo/reinstall',
@@ -404,27 +435,20 @@ class ReinstallTest extends TestCase
                     'templateId' => 143979,
                     'sshKey' => ['foo'],
                 ]
-            );
-        $api
-            ->expects($this->at(2))
-            ->method('get')
-            ->with(
-                '/vps/foo/tasks',
-                ['type' => 'reinstallVm']
             )
-            ->willReturn([24, 42]);
+            ->willReturn([
+                'progress' => 0,
+                'id' => 42,
+                'type' => 'reinstallVm',
+                'state' => 'todo',
+            ]);
         $api
             ->expects($this->at(3))
-            ->method('get')
-            ->with('/vps/foo/tasks/24')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(4))
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn(['state' => 'cancelled']);
         $api
-            ->expects($this->at(5))
+            ->expects($this->at(4))
             ->method('delete')
             ->with('/me/sshKey/foo');
 
