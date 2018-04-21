@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Ark\Exception;
 
-class BootstrapFailed extends RuntimeException
+final class BootstrapFailed extends RuntimeException
 {
 }
