@@ -5,7 +5,9 @@ namespace Innmind\Ark\Forge\Ovh\Bootstrap;
 
 use Innmind\Ark\{
     Forge\Ovh\Bootstrap,
+    Forge\Ovh\WaitTaskCompletion,
     Installation\Name,
+    Exception\OvhTaskFailed,
     Exception\BootstrapFailed,
 };
 use Innmind\Server\Control\{
@@ -20,6 +22,7 @@ final class Reinstall implements Bootstrap
     private $api;
     private $server;
     private $sshFolder;
+    private $wait;
 
     public function __construct(
         Api $api,
@@ -29,6 +32,7 @@ final class Reinstall implements Bootstrap
         $this->api = $api;
         $this->server = $server;
         $this->sshFolder = $sshFolder;
+        $this->wait = new WaitTaskCompletion($api);
     }
 
     public function __invoke(Name $name): void
@@ -47,7 +51,9 @@ final class Reinstall implements Bootstrap
                 'sshKey' => [(string) $name],
             ]);
 
-            $this->wait($name, $task['id']);
+            ($this->wait)($name, $task['id']);
+        } catch (OvhTaskFailed $e) {
+            throw new BootstrapFailed((string) $name, 0, $e);
         } finally {
             $this->api->delete('/me/sshKey/'.$name);
         }
@@ -83,18 +89,5 @@ final class Reinstall implements Bootstrap
             ->wait();
 
         return $this->generateSshKey();
-    }
-
-    private function wait(Name $name, int $id): void
-    {
-        do {
-            sleep(1);
-
-            $task = $this->api->get('/vps/'.$name.'/tasks/'.$id);
-
-            if (in_array($task['state'], ['error', 'cancelled'], true)) {
-                throw new BootstrapFailed((string) $name);
-            }
-        } while ($task['state'] !== 'done');
     }
 }

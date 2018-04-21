@@ -5,21 +5,32 @@ namespace Innmind\Ark\Forge\Ovh\Dispose;
 
 use Innmind\Ark\{
     Forge\Ovh\Dispose,
+    Forge\Ovh\WaitTaskCompletion,
     Installation\Name,
+    Exception\OvhTaskFailed,
+    Exception\InstallationDisposalFailed,
 };
 use Ovh\Api;
 
 final class Stop implements Dispose
 {
     private $api;
+    private $wait;
 
     public function __construct(Api $api)
     {
         $this->api = $api;
+        $this->wait = new WaitTaskCompletion($api);
     }
 
     public function __invoke(Name $name): void
     {
-        $this->api->post('/vps/'.$name.'/stop');
+        $task = $this->api->post('/vps/'.$name.'/stop');
+
+        try {
+            ($this->wait)($name, $task['id']);
+        } catch (OvhTaskFailed $e) {
+            throw new InstallationDisposalFailed((string) $name, 0, $e);
+        }
     }
 }
