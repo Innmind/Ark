@@ -25,19 +25,15 @@ composer require innmind/ark
 The very first step is to buy vps servers from [ovh](https://www.ovh.com/fr/vps/), then you can start writing this kind of code:
 
 ```php
-use Innmind\Compose\ContainerBuilder\ContainerBuilder;
+use function Innmind\Ark\bootstrap;
 use Innmind\Url\Path;
-use Innmind\Immutable\Map;
 use Ovh\Api;
 
-$container = (new ContainerBuilder)(
-    new Path('container.yml'),
-    (new Map('string', 'mixed'))
-        ->put('api', new Api(/* args */))
-        ->put('sshFolder', new Path('/home/{serverUser}/.ssh'))
+$ark = bootstrap(
+    new Api(/* args */),
+    new Path('/home/{serverUser}/.ssh')
 );
 
-$ark = $container->get('ark');
 $installation = $ark->forge()->new();
 $installAppOn($installation->location());
 $ark->array(); // will contain the new server now
