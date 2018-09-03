@@ -4,7 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\Ark;
 
 use Innmind\Url\PathInterface;
-use Innmind\Server\Control\ServerFactory;
+use Innmind\Server\Control\{
+    ServerFactory,
+    Server,
+};
 use Ovh\Api;
 
 function bootstrap(
