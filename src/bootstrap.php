@@ -4,18 +4,15 @@ declare(strict_types = 1);
 namespace Innmind\Ark;
 
 use Innmind\Url\PathInterface;
-use Innmind\Server\Control\{
-    ServerFactory,
-    Server,
-};
+use Innmind\OperatingSystem\OperatingSystem;
 use Ovh\Api;
 
 function bootstrap(
     Api $api,
     PathInterface $sshFolder,
-    Server $server = null
+    OperatingSystem $os
 ): Ark {
-    $server = $server ?? ServerFactory::build();
+    $server = $os->control();
 
     return new Ark(
         new Forge\Ovh(
