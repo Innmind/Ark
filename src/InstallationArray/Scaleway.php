@@ -12,7 +12,10 @@ use Innmind\ScalewaySdk\Authenticated\{
     Servers,
     IPs,
 };
-use Innmind\Url\Url;
+use Innmind\Url\{
+    Url,
+    NullScheme,
+};
 use Innmind\Immutable\SetInterface;
 
 final class Scaleway implements InstallationArray
@@ -32,11 +35,11 @@ final class Scaleway implements InstallationArray
         return new Installation(
             new Name((string) $this->all()->current()->id()),
             Url::fromString(
-                (string) $this
+                'ssh://root@'.$this
                     ->ips
                     ->get($this->all()->current()->ip())
                     ->address()
-            )
+            )->withScheme(new NullScheme)
         );
     }
 

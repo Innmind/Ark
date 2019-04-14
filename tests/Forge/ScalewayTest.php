@@ -111,7 +111,7 @@ class ScalewayTest extends TestCase
 
         $this->assertInstanceOf(Installation::class, $installation);
         $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $installation->name());
-        $this->assertSame('127.0.0.1', (string) $installation->location());
+        $this->assertSame('root@127.0.0.1/', (string) $installation->location());
     }
 
     public function testDispose()

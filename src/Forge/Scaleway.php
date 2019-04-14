@@ -16,7 +16,10 @@ use Innmind\ScalewaySdk\{
 };
 use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\TimeContinuum\Period\Earth\Second;
-use Innmind\Url\Url;
+use Innmind\Url\{
+    Url,
+    NullScheme,
+};
 use Ramsey\Uuid\Uuid;
 
 final class Scaleway implements Forge
@@ -62,11 +65,11 @@ final class Scaleway implements Forge
         return new Installation(
             new Installation\Name((string) $server->id()),
             Url::fromString(
-                (string) $this
+                'ssh://root@'.$this
                     ->ips
                     ->get($server->ip())
                     ->address()
-            )
+            )->withScheme(new NullScheme)
         );
     }
 
