@@ -42,9 +42,3 @@ $ark->array(); // will contain the new server now
 You can refer to the [ovh documentation](https://api.ovh.com/g934.first_step_with_api) to know how you can generate the tokens needed to build the `Api` object.
 
 **Important**: you need to generate the consumer key yourself as it can't be automated. The library requires the following access rights in order to work properly: `POST</me*>`, `DELETE</me*>`, `GET</vps*>` and `POST</vps*>`.
-
-## Tech
-
-Below is the dependency graph of this tool in case you want to understand the inner working.
-
-![](graph.svg)
