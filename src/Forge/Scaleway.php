@@ -46,10 +46,12 @@ final class Scaleway implements Forge
 
     public function new(): Installation
     {
+        $ip = $this->ips->create($this->organization);
         $server = $this->servers->create(
             new Server\Name((string) Uuid::uuid4()),
             $this->organization,
-            $this->image
+            $this->image,
+            $ip->id()
         );
         $this->servers->execute(
             $server->id(),
@@ -64,12 +66,7 @@ final class Scaleway implements Forge
 
         return new Installation(
             new Installation\Name((string) $server->id()),
-            Url::fromString(
-                'ssh://root@'.$this
-                    ->ips
-                    ->get($server->ip())
-                    ->address()
-            )->withScheme(new NullScheme)
+            Url::fromString('ssh://root@'.$ip->address())->withScheme(new NullScheme)
         );
     }
 

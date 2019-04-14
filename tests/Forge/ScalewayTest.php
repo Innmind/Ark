@@ -49,6 +49,16 @@ class ScalewayTest extends TestCase
             $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
             $process = $this->createMock(CurrentProcess::class)
         );
+        $ips
+            ->expects($this->once())
+            ->method('create')
+            ->with($organization)
+            ->willReturn($ip = new IP(
+                new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
+                new Address('127.0.0.1'),
+                $organization,
+                null
+            ));
         $servers
             ->expects($this->at(0))
             ->method('create')
@@ -62,7 +72,7 @@ class ScalewayTest extends TestCase
                 $organization,
                 new Server\Name('foo'),
                 $image,
-                $ip = new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
+                $ip->id(),
                 Server\State::starting(),
                 Set::of(Server\Action::class),
                 Set::of('string'),
@@ -91,16 +101,6 @@ class ScalewayTest extends TestCase
                 Set::of(Server\Action::class),
                 Set::of('string'),
                 Set::of(Volume\Id::class)
-            ));
-        $ips
-            ->expects($this->once())
-            ->method('get')
-            ->with($server->ip())
-            ->willReturn(new IP(
-                $server->ip(),
-                new Address('127.0.0.1'),
-                $organization,
-                $server->id()
             ));
         $process
             ->expects($this->exactly(2))
