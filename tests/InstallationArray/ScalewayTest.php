@@ -45,6 +45,17 @@ class ScalewayTest extends TestCase
                     Set::of(Volume\Id::class)
                 ),
                 new Server(
+                    new Server\Id('039aafa0-e8d6-40d5-9db5-7f2b6ed443d9'),
+                    $organization,
+                    new Server\Name('bar'),
+                    new Image\Id('7e0d1343-c2b4-4a72-85a7-7ef6f63a28e7'),
+                    new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40866'),
+                    Server\State::starting(),
+                    Set::of(Server\Action::class),
+                    Set::of('string'),
+                    Set::of(Volume\Id::class)
+                ),
+                new Server(
                     $server2 = new Server\Id('039aafa0-e8d6-40d5-9db5-7f2b6ed443d8'),
                     $organization,
                     new Server\Name('bar'),

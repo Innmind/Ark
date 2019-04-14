@@ -8,9 +8,10 @@ use Innmind\Ark\{
     Installation,
     Installation\Name,
 };
-use Innmind\ScalewaySdk\Authenticated\{
-    Servers,
-    IPs,
+use Innmind\ScalewaySdk\{
+    Authenticated\Servers,
+    Authenticated\IPs,
+    Server,
 };
 use Innmind\Url\{
     Url,
@@ -70,6 +71,11 @@ final class Scaleway implements InstallationArray
 
     private function all(): SetInterface
     {
-        return $this->all ?? $this->all = $this->servers->list();
+        return $this->all ?? $this->all = $this
+            ->servers
+            ->list()
+            ->filter(static function(Server $server): bool {
+                return $server->state() === Server\State::running();
+            });
     }
 }
