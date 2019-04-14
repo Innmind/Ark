@@ -18,8 +18,8 @@ function bootstrap(
         new Forge\Ovh(
             $api,
             $available = new Forge\Ovh\Available\State($api),
-            new Forge\Ovh\Bootstrap\Reinstall($api, $server, $sshFolder),
-            new Forge\Ovh\Dispose\Stop($api)
+            new Forge\Ovh\Bootstrap\Reinstall($api, $server, $sshFolder, $os->process()),
+            new Forge\Ovh\Dispose\Stop($api, $os->process())
         ),
         new InstallationArray\Ovh($api, $available)
     );
