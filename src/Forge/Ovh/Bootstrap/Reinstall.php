@@ -14,6 +14,7 @@ use Innmind\Server\Control\{
     Server,
     Server\Command,
 };
+use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\Url\PathInterface;
 use Ovh\Api;
 
@@ -27,12 +28,13 @@ final class Reinstall implements Bootstrap
     public function __construct(
         Api $api,
         Server $server,
-        PathInterface $sshFolder
+        PathInterface $sshFolder,
+        CurrentProcess $process
     ) {
         $this->api = $api;
         $this->server = $server;
         $this->sshFolder = $sshFolder;
-        $this->wait = new WaitTaskCompletion($api);
+        $this->wait = new WaitTaskCompletion($api, $process);
     }
 
     public function __invoke(Name $name): void

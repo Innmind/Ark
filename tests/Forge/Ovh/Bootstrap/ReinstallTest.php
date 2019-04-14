@@ -16,6 +16,7 @@ use Innmind\Server\Control\{
     Server\Process\ExitCode,
     Server\Process\Output,
 };
+use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\Url\Path;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +30,8 @@ class ReinstallTest extends TestCase
             new Reinstall(
                 $this->createMock(Api::class),
                 $this->createMock(Server::class),
-                new Path('.ssh')
+                new Path('.ssh'),
+                $this->createMock(CurrentProcess::class)
             )
         );
     }
@@ -39,7 +41,8 @@ class ReinstallTest extends TestCase
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Path('/home/user/.ssh')
+            new Path('/home/user/.ssh'),
+            $this->createMock(CurrentProcess::class)
         );
         $server
             ->expects($this->once())
@@ -139,7 +142,8 @@ class ReinstallTest extends TestCase
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Path('/home/user/.ssh')
+            new Path('/home/user/.ssh'),
+            $this->createMock(CurrentProcess::class)
         );
         $server
             ->expects($this->exactly(3))
@@ -267,7 +271,8 @@ class ReinstallTest extends TestCase
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Path('/home/user/.ssh')
+            new Path('/home/user/.ssh'),
+            $this->createMock(CurrentProcess::class)
         );
         $server
             ->expects($this->once())
@@ -365,7 +370,8 @@ class ReinstallTest extends TestCase
         $reinstall = new Reinstall(
             $api = $this->createMock(Api::class),
             $server = $this->createMock(Server::class),
-            new Path('/home/user/.ssh')
+            new Path('/home/user/.ssh'),
+            $this->createMock(CurrentProcess::class)
         );
         $server
             ->expects($this->once())
