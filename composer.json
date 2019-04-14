@@ -20,7 +20,9 @@
         "innmind/immutable": "^2.8",
         "ovh/ovh": "^2.0",
         "innmind/server-control": "^2.3",
-        "innmind/operating-system": "^1.6"
+        "innmind/scaleway-sdk": "^1.0",
+        "innmind/operating-system": "^1.6",
+        "ramsey/uuid": "^3.8"
     },
     "autoload": {
         "psr-4": {
