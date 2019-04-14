@@ -30,7 +30,7 @@ final class Scaleway implements InstallationArray
     public function current(): Installation
     {
         return new Installation(
-            new Name((string) $this->all()->current()->name()),
+            new Name((string) $this->all()->current()->id()),
             Url::fromString(
                 (string) $this
                     ->ips

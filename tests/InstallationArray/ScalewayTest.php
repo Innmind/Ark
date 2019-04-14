@@ -81,14 +81,14 @@ class ScalewayTest extends TestCase
 
         $this->assertInstanceOf(InstallationArray::class, $array);
         $this->assertTrue($array->valid());
-        $this->assertSame('foo', (string) $array->current()->name());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $array->current()->name());
         $this->assertSame('127.0.0.1', (string) $array->current()->location());
-        $this->assertSame('foo', (string) $array->key());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $array->key());
         $this->assertNull($array->next());
         $this->assertTrue($array->valid());
-        $this->assertSame('bar', (string) $array->current()->name());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d8', (string) $array->current()->name());
         $this->assertSame('127.0.0.2', (string) $array->current()->location());
-        $this->assertSame('bar', (string) $array->key());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d8', (string) $array->key());
         $this->assertNull($array->next());
         $this->assertFalse($array->valid());
         $this->assertCount(2, $array);
