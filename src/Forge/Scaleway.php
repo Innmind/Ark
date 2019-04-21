@@ -13,6 +13,7 @@ use Innmind\ScalewaySdk\{
     Organization,
     Image,
     Server,
+    IP,
 };
 use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\TimeContinuum\Period\Earth\Second;
@@ -46,7 +47,7 @@ final class Scaleway implements Forge
 
     public function new(): Installation
     {
-        $ip = $this->ips->create($this->organization);
+        $ip = $this->generateIp();
         $server = $this->servers->create(
             new Server\Name((string) Uuid::uuid4()),
             $this->organization,
@@ -76,5 +77,22 @@ final class Scaleway implements Forge
             new Server\Id((string) $installation->name()),
             Server\Action::terminate()
         );
+    }
+
+    private function generateIp(): IP
+    {
+        $availableIps = $this
+            ->ips
+            ->list()
+            ->filter(function(IP $ip): bool {
+                return (string) $ip->organization() === (string) $this->organization &&
+                    !$ip->attachedToAServer();
+            });
+
+        if (!$availableIps->empty()) {
+            return $availableIps->current();
+        }
+
+        return $this->ips->create($this->organization);
     }
 }
