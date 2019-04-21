@@ -10,6 +10,7 @@ use Innmind\Ark\{
     Exception\OvhTaskFailed,
     Exception\InstallationDisposalFailed,
 };
+use Innmind\OperatingSystem\CurrentProcess;
 use Ovh\Api;
 
 final class Stop implements Dispose
@@ -17,10 +18,10 @@ final class Stop implements Dispose
     private $api;
     private $wait;
 
-    public function __construct(Api $api)
+    public function __construct(Api $api, CurrentProcess $process)
     {
         $this->api = $api;
-        $this->wait = new WaitTaskCompletion($api);
+        $this->wait = new WaitTaskCompletion($api, $process);
     }
 
     public function __invoke(Name $name): void

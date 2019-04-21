@@ -8,6 +8,8 @@ use Innmind\Ark\{
     Installation\Name,
     Exception\OvhTaskFailed,
 };
+use Innmind\OperatingSystem\CurrentProcess;
+use Innmind\TimeContinuum\Period\Earth\Second;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 use Eris\{
@@ -28,7 +30,8 @@ class WaitTaskCompletionTest extends TestCase
             })
             ->then(function(string $name, int $task): void {
                 $wait = new WaitTaskCompletion(
-                    $api = $this->createMock(Api::class)
+                    $api = $this->createMock(Api::class),
+                    $process = $this->createMock(CurrentProcess::class)
                 );
                 $api
                     ->expects($this->at(0))
@@ -44,6 +47,10 @@ class WaitTaskCompletionTest extends TestCase
                     ->willReturn([
                         'state' => 'done',
                     ]);
+                $process
+                    ->expects($this->exactly(2))
+                    ->method('halt')
+                    ->with(new Second(1));
 
                 $this->assertNull($wait(new Name($name), $task));
             });
@@ -52,7 +59,8 @@ class WaitTaskCompletionTest extends TestCase
     public function testThrowWhenTaskErrored()
     {
         $wait = new WaitTaskCompletion(
-            $api = $this->createMock(Api::class)
+            $api = $this->createMock(Api::class),
+            $this->createMock(CurrentProcess::class)
         );
         $api
             ->expects($this->at(0))
@@ -70,7 +78,8 @@ class WaitTaskCompletionTest extends TestCase
     public function testThrowWhenTaskCanceled()
     {
         $wait = new WaitTaskCompletion(
-            $api = $this->createMock(Api::class)
+            $api = $this->createMock(Api::class),
+            $this->createMock(CurrentProcess::class)
         );
         $api
             ->expects($this->at(0))

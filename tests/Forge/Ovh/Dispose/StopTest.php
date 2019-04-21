@@ -9,6 +9,7 @@ use Innmind\Ark\{
     Installation\Name,
     Exception\InstallationDisposalFailed,
 };
+use Innmind\OperatingSystem\CurrentProcess;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 
@@ -18,14 +19,18 @@ class StopTest extends TestCase
     {
         $this->assertInstanceOf(
             Dispose::class,
-            new Stop($this->createMock(Api::class))
+            new Stop(
+                $this->createMock(Api::class),
+                $this->createMock(CurrentProcess::class)
+            )
         );
     }
 
     public function testInvokation()
     {
         $stop = new Stop(
-            $api = $this->createMock(Api::class)
+            $api = $this->createMock(Api::class),
+            $this->createMock(CurrentProcess::class)
         );
         $api
             ->expects($this->once())
@@ -46,7 +51,8 @@ class StopTest extends TestCase
     public function testThrowWhenFailToStopTheServer()
     {
         $stop = new Stop(
-            $api = $this->createMock(Api::class)
+            $api = $this->createMock(Api::class),
+            $this->createMock(CurrentProcess::class)
         );
         $api
             ->expects($this->once())
