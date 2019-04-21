@@ -14,11 +14,12 @@ use Innmind\ScalewaySdk\{
     Organization,
     Image,
 };
+use Innmind\SshKeyProvider\Provide;
 use Ovh\Api;
 
 function ovh(
     Api $api,
-    PathInterface $sshFolder,
+    Provide $provider,
     OperatingSystem $os
 ): Ark {
     $server = $os->control();
@@ -27,7 +28,7 @@ function ovh(
         new Forge\Ovh(
             $api,
             $available = new Forge\Ovh\Available\State($api),
-            new Forge\Ovh\Bootstrap\Reinstall($api, $server, $sshFolder, $os->process()),
+            new Forge\Ovh\Bootstrap\Reinstall($api, $provider, $os->process()),
             new Forge\Ovh\Dispose\Stop($api, $os->process())
         ),
         new InstallationArray\Ovh($api, $available)

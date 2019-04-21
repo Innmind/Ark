@@ -19,6 +19,7 @@ use Innmind\ScalewaySdk\{
     Organization,
     Image,
 };
+use Innmind\SshKeyProvider\Provide;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +29,7 @@ class BootstrapTest extends TestCase
     {
         $ark = ovh(
             $this->createMock(Api::class),
-            new Path('~/.ssh'),
+            $this->createMock(Provide::class),
             $this->createMock(OperatingSystem::class)
         );
 
