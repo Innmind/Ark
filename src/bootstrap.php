@@ -24,8 +24,6 @@ function ovh(
     Provide $provider,
     OperatingSystem $os
 ): Ark {
-    $server = $os->control();
-
     return new Ark(
         new Forge\Ovh(
             $api,
