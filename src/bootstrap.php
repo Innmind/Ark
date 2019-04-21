@@ -11,8 +11,10 @@ use Innmind\OperatingSystem\{
 use Innmind\ScalewaySdk\{
     Authenticated\Servers,
     Authenticated\IPs,
+    Authenticated\Users,
     Organization,
     Image,
+    User,
 };
 use Innmind\SshKeyProvider\Provide;
 use Ovh\Api;
@@ -38,7 +40,10 @@ function ovh(
 function scaleway(
     Servers $servers,
     IPs $ips,
+    Users $users,
     CurrentProcess $process,
+    Provide $provide,
+    User\Id $user,
     Organization\Id $organization,
     Image\Id $image
 ): Ark {
@@ -46,9 +51,12 @@ function scaleway(
         new Forge\Scaleway(
             $servers,
             $ips,
+            $users,
+            $user,
             $organization,
             $image,
-            $process
+            $process,
+            $provide
         ),
         new InstallationArray\Scaleway($servers, $ips)
     );

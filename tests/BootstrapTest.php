@@ -16,8 +16,10 @@ use Innmind\OperatingSystem\{
 use Innmind\ScalewaySdk\{
     Authenticated\Servers,
     Authenticated\IPs,
+    Authenticated\Users,
     Organization,
     Image,
+    User,
 };
 use Innmind\SshKeyProvider\Provide;
 use Ovh\Api;
@@ -41,7 +43,10 @@ class BootstrapTest extends TestCase
         $ark = scaleway(
             $this->createMock(Servers::class),
             $this->createMock(IPs::class),
+            $this->createMock(Users::class),
             $this->createMock(CurrentProcess::class),
+            $this->createMock(Provide::class),
+            new User\Id('58668933-c432-4a1b-836b-c64b13ad1eda'),
             new Organization\Id('e2d781a9-b8cf-401b-8896-fb5749f331c5'),
             new Image\Id('f7b3048d-b1d6-4989-8adb-5635d34a6c7a')
         );

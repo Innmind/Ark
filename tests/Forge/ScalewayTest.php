@@ -11,16 +11,22 @@ use Innmind\Ark\{
 use Innmind\ScalewaySdk\{
     Authenticated\Servers,
     Authenticated\IPs,
+    Authenticated\Users,
     Organization,
     Image,
     Server,
     IP,
     Volume,
+    User,
 };
 use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\IP\IPv4 as Address;
 use Innmind\TimeContinuum\Period\Earth\Second;
 use Innmind\Url\UrlInterface;
+use Innmind\SshKeyProvider\{
+    Provide,
+    PublicKey,
+};
 use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 
@@ -33,9 +39,12 @@ class ScalewayTest extends TestCase
             new Scaleway(
                 $this->createMock(Servers::class),
                 $this->createMock(IPs::class),
+                $this->createMock(Users::class),
+                new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
                 new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
                 new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-                $this->createMock(CurrentProcess::class)
+                $this->createMock(CurrentProcess::class),
+                $this->createMock(Provide::class)
             )
         );
     }
@@ -45,9 +54,12 @@ class ScalewayTest extends TestCase
         $forge = new Scaleway(
             $servers = $this->createMock(Servers::class),
             $ips = $this->createMock(IPs::class),
+            $users = $this->createMock(Users::class),
+            $user = new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
             $organization = new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
             $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-            $process = $this->createMock(CurrentProcess::class)
+            $process = $this->createMock(CurrentProcess::class),
+            $provider = $this->createMock(Provide::class)
         );
         $ips
             ->expects($this->once())
@@ -110,6 +122,40 @@ class ScalewayTest extends TestCase
             ->expects($this->exactly(2))
             ->method('halt')
             ->with(new Second(1));
+        $users
+            ->expects($this->once())
+            ->method('get')
+            ->with($user)
+            ->willReturn(new User(
+                $user,
+                'foo',
+                'bar',
+                'baz',
+                'foobar',
+                Set::of(
+                    User\SshKey::class,
+                    $foo = new User\SshKey('foo'),
+                    $baz = new User\SshKey('baz')
+                ),
+                Set::of(Organization\Id::class, $organization)
+            ));
+        $provider
+            ->expects($this->once())
+            ->method('__invoke')
+            ->willReturn(Set::of(
+                PublicKey::class,
+                new PublicKey('foo'),
+                new PublicKey('bar')
+            ));
+        $users
+            ->expects($this->once())
+            ->method('updateSshKeys')
+            ->with(
+                $user,
+                $foo,
+                $baz,
+                new User\SshKey('bar')
+            );
 
         $installation = $forge->new();
 
@@ -123,9 +169,12 @@ class ScalewayTest extends TestCase
         $forge = new Scaleway(
             $servers = $this->createMock(Servers::class),
             $ips = $this->createMock(IPs::class),
+            $users = $this->createMock(Users::class),
+            $user = new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
             $organization = new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
             $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-            $process = $this->createMock(CurrentProcess::class)
+            $process = $this->createMock(CurrentProcess::class),
+            $provider = $this->createMock(Provide::class)
         );
         $ips
             ->expects($this->never())
@@ -201,6 +250,40 @@ class ScalewayTest extends TestCase
             ->expects($this->exactly(2))
             ->method('halt')
             ->with(new Second(1));
+        $users
+            ->expects($this->once())
+            ->method('get')
+            ->with($user)
+            ->willReturn(new User(
+                $user,
+                'foo',
+                'bar',
+                'baz',
+                'foobar',
+                Set::of(
+                    User\SshKey::class,
+                    $foo = new User\SshKey('foo'),
+                    $baz = new User\SshKey('baz')
+                ),
+                Set::of(Organization\Id::class, $organization)
+            ));
+        $provider
+            ->expects($this->once())
+            ->method('__invoke')
+            ->willReturn(Set::of(
+                PublicKey::class,
+                new PublicKey('foo'),
+                new PublicKey('bar')
+            ));
+        $users
+            ->expects($this->once())
+            ->method('updateSshKeys')
+            ->with(
+                $user,
+                $foo,
+                $baz,
+                new User\SshKey('bar')
+            );
 
         $installation = $forge->new();
 
@@ -214,9 +297,12 @@ class ScalewayTest extends TestCase
         $forge = new Scaleway(
             $servers = $this->createMock(Servers::class),
             $this->createMock(IPs::class),
+            $this->createMock(Users::class),
+            new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
             new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
             new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-            $this->createMock(CurrentProcess::class)
+            $this->createMock(CurrentProcess::class),
+            $this->createMock(Provide::class)
         );
         $servers
             ->expects($this->once())
