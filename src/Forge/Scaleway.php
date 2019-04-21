@@ -48,20 +48,20 @@ final class Scaleway implements Forge
         Servers $servers,
         IPs $ips,
         Users $users,
+        CurrentProcess $process,
+        Provide $provide,
         User\Id $user,
         Organization\Id $organization,
-        Image\Id $image,
-        CurrentProcess $process,
-        Provide $provide
+        Image\Id $image
     ) {
         $this->servers = $servers;
         $this->ips = $ips;
         $this->users = $users;
+        $this->process = $process;
+        $this->provide = $provide;
         $this->user = $user;
         $this->organization = $organization;
         $this->image = $image;
-        $this->process = $process;
-        $this->provide = $provide;
     }
 
     public function new(): Installation

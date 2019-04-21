@@ -40,11 +40,11 @@ class ScalewayTest extends TestCase
                 $this->createMock(Servers::class),
                 $this->createMock(IPs::class),
                 $this->createMock(Users::class),
+                $this->createMock(CurrentProcess::class),
+                $this->createMock(Provide::class),
                 new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
                 new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
-                new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-                $this->createMock(CurrentProcess::class),
-                $this->createMock(Provide::class)
+                new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6')
             )
         );
     }
@@ -55,11 +55,11 @@ class ScalewayTest extends TestCase
             $servers = $this->createMock(Servers::class),
             $ips = $this->createMock(IPs::class),
             $users = $this->createMock(Users::class),
+            $process = $this->createMock(CurrentProcess::class),
+            $provider = $this->createMock(Provide::class),
             $user = new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
             $organization = new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
-            $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-            $process = $this->createMock(CurrentProcess::class),
-            $provider = $this->createMock(Provide::class)
+            $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6')
         );
         $ips
             ->expects($this->once())
@@ -170,11 +170,11 @@ class ScalewayTest extends TestCase
             $servers = $this->createMock(Servers::class),
             $ips = $this->createMock(IPs::class),
             $users = $this->createMock(Users::class),
+            $process = $this->createMock(CurrentProcess::class),
+            $provider = $this->createMock(Provide::class),
             $user = new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
             $organization = new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
-            $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-            $process = $this->createMock(CurrentProcess::class),
-            $provider = $this->createMock(Provide::class)
+            $image = new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6')
         );
         $ips
             ->expects($this->never())
@@ -298,11 +298,11 @@ class ScalewayTest extends TestCase
             $servers = $this->createMock(Servers::class),
             $this->createMock(IPs::class),
             $this->createMock(Users::class),
+            $this->createMock(CurrentProcess::class),
+            $this->createMock(Provide::class),
             new User\Id('f8b3a7be-e750-4dc1-9c07-7e42844e21d9'),
             new Organization\Id('e34fce59-e05d-4adc-90fb-1085d6beb837'),
-            new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6'),
-            $this->createMock(CurrentProcess::class),
-            $this->createMock(Provide::class)
+            new Image\Id('ceae2662-88db-406a-88a7-34bb888bbdd6')
         );
         $servers
             ->expects($this->once())

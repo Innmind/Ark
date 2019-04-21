@@ -52,11 +52,11 @@ function scaleway(
             $servers,
             $ips,
             $users,
+            $process,
+            $provide,
             $user,
             $organization,
-            $image,
-            $process,
-            $provide
+            $image
         ),
         new InstallationArray\Scaleway($servers, $ips)
     );
