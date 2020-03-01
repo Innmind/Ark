@@ -53,11 +53,11 @@ $ark = scaleway(
     $os->process(),
     new Local(
         $os->control()->processes(),
-        new Path('/home/{serverUser}/.ssh')
+        Path::of('/home/{serverUser}/.ssh'),
     ),
     new User\Id('your user uuid'),
     new Organization\Id('the organization uuid you want to create servers in'),
-    new Image\Id('the image uuid you want to build')
+    new Image\Id('the image uuid you want to build'),
 );
 
 $installation = $ark->forge()->new();
@@ -82,9 +82,9 @@ $ark = ovh(
     new Api(/* args */),
     new Local(
         $os->control()->processes(),
-        new Path('/home/{serverUser}/.ssh')
+        Path::of('/home/{serverUser}/.ssh'),
     ),
-    $os
+    $os,
 );
 
 $installation = $ark->forge()->new();
