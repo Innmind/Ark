@@ -7,7 +7,7 @@ use Innmind\Ark\{
     Installation,
     Installation\Name,
 };
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 use PHPUnit\Framework\TestCase;
 
 class InstallationTest extends TestCase
@@ -16,7 +16,7 @@ class InstallationTest extends TestCase
     {
         $installation = new Installation(
             $name = new Name('foo'),
-            $url = $this->createMock(UrlInterface::class)
+            $url = Url::of('example.com')
         );
 
         $this->assertSame($name, $installation->name());

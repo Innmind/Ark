@@ -15,6 +15,7 @@ use Innmind\Ark\{
 };
 use Innmind\Url\Url;
 use Innmind\Immutable\Set;
+use function Innmind\Immutable\unwrap;
 use Ovh\Api;
 
 final class Ovh implements Forge
@@ -44,19 +45,20 @@ final class Ovh implements Forge
         $names = Set::of('string', ...$this->api->get('/vps'))->filter(function(string $vps): bool {
             return ($this->available)(new Name($vps));
         });
+        $names = unwrap($names);
 
         //attempt to bootstrap a new server, if one fails it will attempt to use
         //the next available one
-        while ($names->valid()) {
+        while (\is_string(\current($names))) {
             try {
-                ($this->bootstrap)(new Name($names->current()));
+                ($this->bootstrap)(new Name(\current($names)));
 
                 return new Installation(
-                    new Name($names->current()),
-                    Url::fromString($names->current()),
+                    new Name(\current($names)),
+                    Url::of(\current($names)),
                 );
             } catch (RuntimeException $e) {
-                $names->next();
+                \next($names);
             }
         }
 

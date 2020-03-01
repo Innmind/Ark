@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace Innmind\Ark;
 
 use Innmind\Ark\Installation\Name;
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 
 final class Installation
 {
     private Name $name;
-    private UrlInterface $location;
+    private Url $location;
 
-    public function __construct(Name $name, UrlInterface $location)
+    public function __construct(Name $name, Url $location)
     {
         $this->name = $name;
         $this->location = $location;
@@ -22,7 +22,7 @@ final class Installation
         return $this->name;
     }
 
-    public function location(): UrlInterface
+    public function location(): Url
     {
         return $this->location;
     }

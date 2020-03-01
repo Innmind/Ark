@@ -18,18 +18,16 @@ use Innmind\ScalewaySdk\{
     User,
 };
 use Innmind\OperatingSystem\CurrentProcess;
-use Innmind\TimeContinuum\Period\Earth\Second;
-use Innmind\Url\{
-    Url,
-    NullScheme,
-};
+use Innmind\TimeContinuum\Earth\Period\Second;
+use Innmind\Url\Url;
 use Innmind\SshKeyProvider\{
     Provide,
     PublicKey,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\{
+    unwrap,
+    first,
 };
 use Ramsey\Uuid\Uuid;
 
@@ -86,8 +84,8 @@ final class Scaleway implements Forge
         } while ($server->state() !== Server\State::running());
 
         return new Installation(
-            new Installation\Name((string) $server->id()),
-            Url::fromString('ssh://root@'.$ip->address())->withScheme(new NullScheme),
+            new Installation\Name($server->id()->toString()),
+            Url::of('ssh://root@'.$ip->address()->toString())->withoutScheme(),
         );
     }
 
@@ -107,7 +105,7 @@ final class Scaleway implements Forge
             ->sshKeys()
             ->reduce(
                 Map::of('string', User\SshKey::class),
-                static function(MapInterface $keys, User\SshKey $ssh): MapInterface {
+                static function(Map $keys, User\SshKey $ssh): Map {
                     return $keys->put(
                         $ssh->key(),
                         $ssh,
@@ -116,19 +114,19 @@ final class Scaleway implements Forge
             );
         $keys = ($this->provide)()
             ->filter(static function(PublicKey $key) use ($currentKeys): bool {
-                return !$currentKeys->contains((string) $key);
+                return !$currentKeys->contains($key->toString());
             })
             ->reduce(
                 $currentKeys,
-                static function(MapInterface $keys, PublicKey $key): MapInterface {
+                static function(Map $keys, PublicKey $key): Map {
                     return $keys->put(
-                        (string) $key,
-                        new User\SshKey((string) $key),
+                        $key->toString(),
+                        new User\SshKey($key->toString()),
                     );
                 },
             )
             ->values();
-        $this->users->updateSshKeys($this->user, ...$keys);
+        $this->users->updateSshKeys($this->user, ...unwrap($keys));
     }
 
     private function generateIp(): IP
@@ -137,12 +135,12 @@ final class Scaleway implements Forge
             ->ips
             ->list()
             ->filter(function(IP $ip): bool {
-                return (string) $ip->organization() === (string) $this->organization &&
+                return $ip->organization()->toString() === $this->organization->toString() &&
                     !$ip->attachedToAServer();
             });
 
         if (!$availableIps->empty()) {
-            return $availableIps->current();
+            return first($availableIps);
         }
 
         return $this->ips->create($this->organization);

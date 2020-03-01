@@ -30,10 +30,22 @@ class OvhTest extends TestCase
     {
         $ovh = new Ovh(
             $api = $this->createMock(Api::class),
-            $available = $this->createMock(Available::class)
+            new class implements Available {
+                public function __invoke(Name $name): bool {
+                    switch ($name->toString()) {
+                        case 'available1':
+                        case 'available2':
+                        case 'available3':
+                            return true;
+
+                        default:
+                            return false;
+                    }
+                }
+            },
         );
         $api
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('get')
             ->with('/vps')
             ->willReturn([
@@ -44,51 +56,28 @@ class OvhTest extends TestCase
                 'vps44.ovh.net',
                 'available3',
             ]);
-        $available
-            ->expects($this->at(0))
-            ->method('__invoke')
-            ->with(new Name('vps42.ovh.net'))
-            ->willReturn(false);
-        $available
-            ->expects($this->at(1))
-            ->method('__invoke')
-            ->with(new Name('available1'))
-            ->willReturn(true);
-        $available
-            ->expects($this->at(2))
-            ->method('__invoke')
-            ->with(new Name('vps43.ovh.net'))
-            ->willReturn(false);
-        $available
-            ->expects($this->at(3))
-            ->method('__invoke')
-            ->with(new Name('available2'))
-            ->willReturn(true);
-        $available
-            ->expects($this->at(4))
-            ->method('__invoke')
-            ->with(new Name('vps44.ovh.net'))
-            ->willReturn(false);
-        $available
-            ->expects($this->at(5))
-            ->method('__invoke')
-            ->with(new Name('available3'))
-            ->willReturn(true);
 
-        $this->assertInstanceOf(Installation::class, $ovh->current());
-        $this->assertInstanceOf(Name::class, $ovh->key());
+        $this->assertNull($ovh->foreach(fn($installation) => $this->assertInstanceOf(
+            Installation::class,
+            $installation,
+        )));
+
+        $installations = $ovh->reduce(
+            [],
+            function($installations, $installation) {
+                $installations[] = $installation;
+
+                return $installations;
+            },
+        );
+
         $this->assertCount(3, $ovh);
-        $this->assertSame('vps42.ovh.net', $ovh->key()->toString());
-        $this->assertSame('vps42.ovh.net', $ovh->current()->name()->toString());
-        $this->assertSame('vps42.ovh.net', (string) $ovh->current()->location());
-        $this->assertTrue($ovh->valid());
-        $this->assertNull($ovh->next());
-        $this->assertSame('vps43.ovh.net', $ovh->key()->toString());
-        $this->assertNull($ovh->next());
-        $this->assertSame('vps44.ovh.net', $ovh->key()->toString());
-        $this->assertNull($ovh->next());
-        $this->assertFalse($ovh->valid());
-        $this->assertNull($ovh->rewind());
-        $this->assertSame('vps42.ovh.net', $ovh->key()->toString());
+        $this->assertCount(3, $installations);
+        $this->assertSame('vps42.ovh.net', \current($installations)->name()->toString());
+        $this->assertSame('vps42.ovh.net', \current($installations)->location()->toString());
+        \next($installations);
+        $this->assertSame('vps43.ovh.net', \current($installations)->name()->toString());
+        \next($installations);
+        $this->assertSame('vps44.ovh.net', \current($installations)->name()->toString());
     }
 }

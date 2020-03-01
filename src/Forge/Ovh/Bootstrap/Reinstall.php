@@ -12,6 +12,7 @@ use Innmind\Ark\{
 };
 use Innmind\SshKeyProvider\Provide;
 use Innmind\OperatingSystem\CurrentProcess;
+use function Innmind\Immutable\first;
 use Ovh\Api;
 
 final class Reinstall implements Bootstrap
@@ -38,7 +39,7 @@ final class Reinstall implements Bootstrap
             throw new BootstrapFailed('A ssh key is required');
         }
 
-        $sshKey = (string) $sshKeys->current();
+        $sshKey = first($sshKeys)->toString();
 
         $this->api->post('/me/sshKey', [
             'key' => $sshKey,

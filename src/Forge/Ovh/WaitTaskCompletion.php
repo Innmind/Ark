@@ -8,7 +8,7 @@ use Innmind\Ark\{
     Exception\OvhTaskFailed,
 };
 use Innmind\OperatingSystem\CurrentProcess;
-use Innmind\TimeContinuum\Period\Earth\Second;
+use Innmind\TimeContinuum\Earth\Period\Second;
 use Ovh\Api;
 
 final class WaitTaskCompletion
