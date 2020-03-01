@@ -13,8 +13,8 @@ use Ovh\Api;
 
 final class WaitTaskCompletion
 {
-    private $api;
-    private $process;
+    private Api $api;
+    private CurrentProcess $process;
 
     public function __construct(Api $api, CurrentProcess $process)
     {

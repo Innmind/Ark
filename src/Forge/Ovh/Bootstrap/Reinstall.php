@@ -16,9 +16,9 @@ use Ovh\Api;
 
 final class Reinstall implements Bootstrap
 {
-    private $api;
-    private $provide;
-    private $wait;
+    private Api $api;
+    private Provide $provide;
+    private WaitTaskCompletion $wait;
 
     public function __construct(
         Api $api,

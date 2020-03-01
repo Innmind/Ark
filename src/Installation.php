@@ -8,8 +8,8 @@ use Innmind\Url\UrlInterface;
 
 final class Installation
 {
-    private $name;
-    private $location;
+    private Name $name;
+    private UrlInterface $location;
 
     public function __construct(Name $name, UrlInterface $location)
     {

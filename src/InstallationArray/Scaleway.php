@@ -21,9 +21,9 @@ use Innmind\Immutable\SetInterface;
 
 final class Scaleway implements InstallationArray
 {
-    private $servers;
-    private $ips;
-    private $all;
+    private Servers $servers;
+    private IPs $ips;
+    private ?SetInterface $all = null;
 
     public function __construct(Servers $servers, IPs $ips)
     {
@@ -71,7 +71,7 @@ final class Scaleway implements InstallationArray
 
     private function all(): SetInterface
     {
-        return $this->all ?? $this->all = $this
+        return $this->all ??= $this
             ->servers
             ->list()
             ->filter(static function(Server $server): bool {

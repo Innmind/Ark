@@ -35,14 +35,14 @@ use Ramsey\Uuid\Uuid;
 
 final class Scaleway implements Forge
 {
-    private $servers;
-    private $ips;
-    private $users;
-    private $user;
-    private $organization;
-    private $image;
-    private $process;
-    private $provide;
+    private Servers $servers;
+    private IPs $ips;
+    private Users $users;
+    private User\Id $user;
+    private Organization\Id $organization;
+    private Image\Id $image;
+    private CurrentProcess $process;
+    private Provide $provide;
 
     public function __construct(
         Servers $servers,

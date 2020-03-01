@@ -15,9 +15,9 @@ use Ovh\Api;
 
 final class Ovh implements InstallationArray
 {
-    private $api;
-    private $available;
-    private $names;
+    private Api $api;
+    private Available $available;
+    private ?Set $names = null;
 
     public function __construct(Api $api, Available $available)
     {
@@ -60,7 +60,7 @@ final class Ovh implements InstallationArray
 
     private function names(): Set
     {
-        return $this->names ?? $this->names = Set::of(
+        return $this->names ??= Set::of(
             'string',
             ...$this->api->get('/vps')
         )->filter(function(string $name): bool {

@@ -11,7 +11,7 @@ use Ovh\Api;
 
 final class State implements Available
 {
-    private $api;
+    private Api $api;
 
     public function __construct(Api $api)
     {

@@ -11,7 +11,7 @@ use Innmind\Immutable\Sequence;
 
 final class Consensus implements Available
 {
-    private $strategies;
+    private Sequence $strategies;
 
     public function __construct(Available ...$strategies)
     {

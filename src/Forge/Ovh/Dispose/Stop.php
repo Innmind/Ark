@@ -15,8 +15,8 @@ use Ovh\Api;
 
 final class Stop implements Dispose
 {
-    private $api;
-    private $wait;
+    private Api $api;
+    private WaitTaskCompletion $wait;
 
     public function __construct(Api $api, CurrentProcess $process)
     {

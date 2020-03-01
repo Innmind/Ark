@@ -10,7 +10,7 @@ use Innmind\Ark\{
 
 final class All implements Dispose
 {
-    private $strategies;
+    private array $strategies;
 
     public function __construct(Dispose ...$strategies)
     {

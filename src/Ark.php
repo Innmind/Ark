@@ -5,8 +5,8 @@ namespace Innmind\Ark;
 
 final class Ark
 {
-    private $forge;
-    private $array;
+    private Forge $forge;
+    private InstallationArray $array;
 
     public function __construct(Forge $forge, InstallationArray $array)
     {
