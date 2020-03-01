@@ -26,6 +26,7 @@ final class Stop implements Dispose
 
     public function __invoke(Name $name): void
     {
+        /** @var array{id: int, progress: int, type: string, state: string} */
         $task = $this->api->post('/vps/'.$name->toString().'/stop');
 
         try {

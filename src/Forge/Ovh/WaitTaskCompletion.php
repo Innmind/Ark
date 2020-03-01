@@ -29,6 +29,7 @@ final class WaitTaskCompletion
         do {
             $this->process->halt(new Second(1));
 
+            /** @var array{id: int, progress: int, type: string, state: string} */
             $task = $this->api->get('/vps/'.$name->toString().'/tasks/'.$id);
 
             if (\in_array($task['state'], ['error', 'cancelled'], true)) {

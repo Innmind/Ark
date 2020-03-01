@@ -34,6 +34,10 @@ final class Ovh implements InstallationArray
 
     public function reduce($initial, callable $reducer)
     {
+        /**
+         * @psalm-suppress MissingParamType
+         * @psalm-suppress MixedArgument
+         */
         return $this->names()->reduce(
             $initial,
             static fn($initial, string $name) => $reducer(
@@ -53,7 +57,9 @@ final class Ovh implements InstallationArray
 
     private function names(): Set
     {
-        return Set::strings(...$this->api->get('/vps'))->filter(
+        /** @var list<string> */
+        $vps = $this->api->get('/vps');
+        return Set::strings(...$vps)->filter(
             fn(string $name): bool => !($this->available)(new Name($name)),
         );
     }

@@ -99,6 +99,7 @@ final class Scaleway implements Forge
 
     private function injectSshKeys(): void
     {
+        /** @var Map<string, User\SshKey> */
         $currentKeys = $this
             ->users
             ->get($this->user)
@@ -110,6 +111,7 @@ final class Scaleway implements Forge
                     yield $ssh->key() => $ssh;
                 },
             );
+        /** @var Map<string, User\SshKey> */
         $newKeys = ($this->provide)()
             ->filter(static function(PublicKey $key) use ($currentKeys): bool {
                 return !$currentKeys->contains($key->toString());
