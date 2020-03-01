@@ -103,28 +103,28 @@ final class Scaleway implements Forge
             ->users
             ->get($this->user)
             ->sshKeys()
-            ->reduce(
-                Map::of('string', User\SshKey::class),
-                static function(Map $keys, User\SshKey $ssh): Map {
-                    return $keys->put(
-                        $ssh->key(),
-                        $ssh,
-                    );
+            ->toMapOf(
+                'string',
+                User\SshKey::class,
+                static function(User\SshKey $ssh): \Generator {
+                    yield $ssh->key() => $ssh;
                 },
             );
-        $keys = ($this->provide)()
+        $newKeys = ($this->provide)()
             ->filter(static function(PublicKey $key) use ($currentKeys): bool {
                 return !$currentKeys->contains($key->toString());
             })
-            ->reduce(
-                $currentKeys,
-                static function(Map $keys, PublicKey $key): Map {
-                    return $keys->put(
+            ->toMapOf(
+                'string',
+                User\SshKey::class,
+                static function(PublicKey $key): \Generator {
+                    yield $key->toString() => new User\SshKey(
                         $key->toString(),
-                        new User\SshKey($key->toString()),
                     );
                 },
-            )
+            );
+        $keys = $currentKeys
+            ->merge($newKeys)
             ->values();
         $this->users->updateSshKeys($this->user, ...unwrap($keys));
     }

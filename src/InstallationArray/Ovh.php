@@ -53,10 +53,8 @@ final class Ovh implements InstallationArray
 
     private function names(): Set
     {
-        return Set::strings(
-            ...$this->api->get('/vps'),
-        )->filter(function(string $name): bool {
-            return !($this->available)(new Name($name));
-        });
+        return Set::strings(...$this->api->get('/vps'))->filter(
+            fn(string $name): bool => !($this->available)(new Name($name)),
+        );
     }
 }

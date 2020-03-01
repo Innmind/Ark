@@ -42,7 +42,7 @@ final class Ovh implements Forge
         //iterate over existing vps and filter the ones "available" as the api
         //doesn't allow to order a new vps on demand, so instead we look for an
         //existing purchased vps that's available
-        $names = Set::of('string', ...$this->api->get('/vps'))->filter(function(string $vps): bool {
+        $names = Set::strings(...$this->api->get('/vps'))->filter(function(string $vps): bool {
             return ($this->available)(new Name($vps));
         });
         $names = unwrap($names);
