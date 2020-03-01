@@ -78,17 +78,17 @@ class OvhTest extends TestCase
         $this->assertInstanceOf(Installation::class, $ovh->current());
         $this->assertInstanceOf(Name::class, $ovh->key());
         $this->assertCount(3, $ovh);
-        $this->assertSame('vps42.ovh.net', (string) $ovh->key());
-        $this->assertSame('vps42.ovh.net', (string) $ovh->current()->name());
+        $this->assertSame('vps42.ovh.net', $ovh->key()->toString());
+        $this->assertSame('vps42.ovh.net', $ovh->current()->name()->toString());
         $this->assertSame('vps42.ovh.net', (string) $ovh->current()->location());
         $this->assertTrue($ovh->valid());
         $this->assertNull($ovh->next());
-        $this->assertSame('vps43.ovh.net', (string) $ovh->key());
+        $this->assertSame('vps43.ovh.net', $ovh->key()->toString());
         $this->assertNull($ovh->next());
-        $this->assertSame('vps44.ovh.net', (string) $ovh->key());
+        $this->assertSame('vps44.ovh.net', $ovh->key()->toString());
         $this->assertNull($ovh->next());
         $this->assertFalse($ovh->valid());
         $this->assertNull($ovh->rewind());
-        $this->assertSame('vps42.ovh.net', (string) $ovh->key());
+        $this->assertSame('vps42.ovh.net', $ovh->key()->toString());
     }
 }

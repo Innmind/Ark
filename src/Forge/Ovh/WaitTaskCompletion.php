@@ -29,7 +29,7 @@ final class WaitTaskCompletion
         do {
             $this->process->halt(new Second(1));
 
-            $task = $this->api->get('/vps/'.$name.'/tasks/'.$id);
+            $task = $this->api->get('/vps/'.$name->toString().'/tasks/'.$id);
 
             if (in_array($task['state'], ['error', 'cancelled'], true)) {
                 throw new OvhTaskFailed;

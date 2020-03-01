@@ -74,7 +74,7 @@ class OVHTest extends TestCase
         $installation = $forge->new();
 
         $this->assertInstanceOf(Installation::class, $installation);
-        $this->assertSame('baz', (string) $installation->name());
+        $this->assertSame('baz', $installation->name()->toString());
         $this->assertSame('baz', (string) $installation->location());
     }
 

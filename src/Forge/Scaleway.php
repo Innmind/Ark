@@ -94,7 +94,7 @@ final class Scaleway implements Forge
     public function dispose(Installation $installation): void
     {
         $this->servers->execute(
-            new Server\Id((string) $installation->name()),
+            new Server\Id($installation->name()->toString()),
             Server\Action::terminate()
         );
     }

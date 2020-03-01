@@ -160,7 +160,7 @@ class ScalewayTest extends TestCase
         $installation = $forge->new();
 
         $this->assertInstanceOf(Installation::class, $installation);
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $installation->name());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', $installation->name()->toString());
         $this->assertSame('root@127.0.0.1/', (string) $installation->location());
     }
 
@@ -288,7 +288,7 @@ class ScalewayTest extends TestCase
         $installation = $forge->new();
 
         $this->assertInstanceOf(Installation::class, $installation);
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $installation->name());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', $installation->name()->toString());
         $this->assertSame('root@127.0.0.1/', (string) $installation->location());
     }
 

@@ -26,12 +26,12 @@ final class Stop implements Dispose
 
     public function __invoke(Name $name): void
     {
-        $task = $this->api->post('/vps/'.$name.'/stop');
+        $task = $this->api->post('/vps/'.$name->toString().'/stop');
 
         try {
             ($this->wait)($name, $task['id']);
         } catch (OvhTaskFailed $e) {
-            throw new InstallationDisposalFailed((string) $name, 0, $e);
+            throw new InstallationDisposalFailed($name->toString(), 0, $e);
         }
     }
 }

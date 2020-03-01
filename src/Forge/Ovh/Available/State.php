@@ -21,7 +21,7 @@ final class State implements Available
     public function __invoke(Name $name): bool
     {
         try {
-            return $this->api->get('/vps/'.$name)['state'] === 'stopped';
+            return $this->api->get('/vps/'.$name->toString())['state'] === 'stopped';
         } catch (\Throwable $e) {
             return false;
         }

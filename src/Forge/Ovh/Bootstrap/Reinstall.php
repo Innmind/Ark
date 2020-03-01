@@ -42,21 +42,21 @@ final class Reinstall implements Bootstrap
 
         $this->api->post('/me/sshKey', [
             'key' => $sshKey,
-            'keyName' => (string) $name,
+            'keyName' => $name->toString(),
         ]);
-        $template = $this->api->get('/vps/'.$name.'/distribution')['id'];
+        $template = $this->api->get('/vps/'.$name->toString().'/distribution')['id'];
         try {
-            $task = $this->api->post('/vps/'.$name.'/reinstall', [
+            $task = $this->api->post('/vps/'.$name->toString().'/reinstall', [
                 'doNotSendPassword' => true,
                 'templateId' => $template,
-                'sshKey' => [(string) $name],
+                'sshKey' => [$name->toString()],
             ]);
 
             ($this->wait)($name, $task['id']);
         } catch (OvhTaskFailed $e) {
-            throw new BootstrapFailed((string) $name, 0, $e);
+            throw new BootstrapFailed($name->toString(), 0, $e);
         } finally {
-            $this->api->delete('/me/sshKey/'.$name);
+            $this->api->delete('/me/sshKey/'.$name->toString());
         }
     }
 }
