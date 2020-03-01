@@ -69,14 +69,14 @@ final class Scaleway implements Forge
         $this->injectSshKeys();
         $ip = $this->generateIp();
         $server = $this->servers->create(
-            new Server\Name((string) Uuid::uuid4()),
+            new Server\Name(Uuid::uuid4()->toString()),
             $this->organization,
             $this->image,
-            $ip->id()
+            $ip->id(),
         );
         $this->servers->execute(
             $server->id(),
-            Server\Action::powerOn()
+            Server\Action::powerOn(),
         );
 
         do {
@@ -87,7 +87,7 @@ final class Scaleway implements Forge
 
         return new Installation(
             new Installation\Name((string) $server->id()),
-            Url::fromString('ssh://root@'.$ip->address())->withScheme(new NullScheme)
+            Url::fromString('ssh://root@'.$ip->address())->withScheme(new NullScheme),
         );
     }
 
@@ -95,7 +95,7 @@ final class Scaleway implements Forge
     {
         $this->servers->execute(
             new Server\Id($installation->name()->toString()),
-            Server\Action::terminate()
+            Server\Action::terminate(),
         );
     }
 
@@ -110,9 +110,9 @@ final class Scaleway implements Forge
                 static function(MapInterface $keys, User\SshKey $ssh): MapInterface {
                     return $keys->put(
                         $ssh->key(),
-                        $ssh
+                        $ssh,
                     );
-                }
+                },
             );
         $keys = ($this->provide)()
             ->filter(static function(PublicKey $key) use ($currentKeys): bool {
@@ -123,9 +123,9 @@ final class Scaleway implements Forge
                 static function(MapInterface $keys, PublicKey $key): MapInterface {
                     return $keys->put(
                         (string) $key,
-                        new User\SshKey((string) $key)
+                        new User\SshKey((string) $key),
                     );
-                }
+                },
             )
             ->values();
         $this->users->updateSshKeys($this->user, ...$keys);

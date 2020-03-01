@@ -53,7 +53,7 @@ final class Ovh implements Forge
 
                 return new Installation(
                     new Name($names->current()),
-                    Url::fromString($names->current())
+                    Url::fromString($names->current()),
                 );
             } catch (RuntimeException $e) {
                 $names->next();

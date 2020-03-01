@@ -29,7 +29,7 @@ final class Ovh implements InstallationArray
     {
         return new Installation(
             new Name($this->names()->current()),
-            Url::fromString($this->names()->current())
+            Url::fromString($this->names()->current()),
         );
     }
 
@@ -62,7 +62,7 @@ final class Ovh implements InstallationArray
     {
         return $this->names ??= Set::of(
             'string',
-            ...$this->api->get('/vps')
+            ...$this->api->get('/vps'),
         )->filter(function(string $name): bool {
             return !($this->available)(new Name($name));
         });

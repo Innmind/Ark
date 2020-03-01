@@ -39,7 +39,7 @@ final class Scaleway implements InstallationArray
                 'ssh://root@'.$this
                     ->ips
                     ->get($this->all()->current()->ip())
-                    ->address()
+                    ->address(),
             )->withScheme(new NullScheme)
         );
     }

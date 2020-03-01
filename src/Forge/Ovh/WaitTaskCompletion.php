@@ -31,7 +31,7 @@ final class WaitTaskCompletion
 
             $task = $this->api->get('/vps/'.$name->toString().'/tasks/'.$id);
 
-            if (in_array($task['state'], ['error', 'cancelled'], true)) {
+            if (\in_array($task['state'], ['error', 'cancelled'], true)) {
                 throw new OvhTaskFailed;
             }
         } while ($task['state'] !== 'done');
