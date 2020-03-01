@@ -11,11 +11,11 @@ use Innmind\Immutable\Sequence;
 
 final class Consensus implements Available
 {
-    private $strategies;
+    private Sequence $strategies;
 
     public function __construct(Available ...$strategies)
     {
-        $this->strategies = Sequence::of(...$strategies);
+        $this->strategies = Sequence::of(Available::class, ...$strategies);
     }
 
     public function __invoke(Name $name): bool

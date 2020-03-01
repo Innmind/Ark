@@ -21,8 +21,8 @@ use Innmind\ScalewaySdk\{
 };
 use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\IP\IPv4 as Address;
-use Innmind\TimeContinuum\Period\Earth\Second;
-use Innmind\Url\UrlInterface;
+use Innmind\TimeContinuum\Earth\Period\Second;
+use Innmind\Url\Url;
 use Innmind\SshKeyProvider\{
     Provide,
     PublicKey,
@@ -67,7 +67,7 @@ class ScalewayTest extends TestCase
             ->with($organization)
             ->willReturn($ip = new IP(
                 new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
-                new Address('127.0.0.1'),
+                Address::of('127.0.0.1'),
                 $organization,
                 null
             ));
@@ -160,8 +160,8 @@ class ScalewayTest extends TestCase
         $installation = $forge->new();
 
         $this->assertInstanceOf(Installation::class, $installation);
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $installation->name());
-        $this->assertSame('root@127.0.0.1/', (string) $installation->location());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', $installation->name()->toString());
+        $this->assertSame('root@127.0.0.1/', $installation->location()->toString());
     }
 
     public function testReuseUnusedIPWhenCreatingServer()
@@ -186,19 +186,19 @@ class ScalewayTest extends TestCase
                 IP::class,
                 new IP(
                     new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
-                    new Address('127.0.0.3'),
+                    Address::of('127.0.0.3'),
                     $organization,
                     new Server\Id('8d923ccf-8148-4233-9b3e-589c34549d96')
                 ),
                 new IP(
                     new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40864'),
-                    new Address('127.0.0.2'),
+                    Address::of('127.0.0.2'),
                     new Organization\Id('e51a0dc0-9386-42f0-930c-afb95917b847'),
                     null
                 ),
                 $ip = new IP(
                     new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
-                    new Address('127.0.0.1'),
+                    Address::of('127.0.0.1'),
                     $organization,
                     null
                 )
@@ -288,8 +288,8 @@ class ScalewayTest extends TestCase
         $installation = $forge->new();
 
         $this->assertInstanceOf(Installation::class, $installation);
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $installation->name());
-        $this->assertSame('root@127.0.0.1/', (string) $installation->location());
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', $installation->name()->toString());
+        $this->assertSame('root@127.0.0.1/', $installation->location()->toString());
     }
 
     public function testDispose()
@@ -314,7 +314,7 @@ class ScalewayTest extends TestCase
 
         $this->assertNull($forge->dispose(new Installation(
             new Installation\Name('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7'),
-            $this->createMock(UrlInterface::class)
+            Url::of('example.com'),
         )));
     }
 }

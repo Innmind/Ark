@@ -12,13 +12,14 @@ use Innmind\Ark\{
 };
 use Innmind\SshKeyProvider\Provide;
 use Innmind\OperatingSystem\CurrentProcess;
+use function Innmind\Immutable\first;
 use Ovh\Api;
 
 final class Reinstall implements Bootstrap
 {
-    private $api;
-    private $provide;
-    private $wait;
+    private Api $api;
+    private Provide $provide;
+    private WaitTaskCompletion $wait;
 
     public function __construct(
         Api $api,
@@ -38,25 +39,28 @@ final class Reinstall implements Bootstrap
             throw new BootstrapFailed('A ssh key is required');
         }
 
-        $sshKey = (string) $sshKeys->current();
+        $sshKey = first($sshKeys)->toString();
 
         $this->api->post('/me/sshKey', [
             'key' => $sshKey,
-            'keyName' => (string) $name,
+            'keyName' => $name->toString(),
         ]);
-        $template = $this->api->get('/vps/'.$name.'/distribution')['id'];
+        /** @var array{id: int, bitFormat: int, name: string, locale: string, availableLanguage: list<string>, distribution: string} */
+        $distribution = $this->api->get('/vps/'.$name->toString().'/distribution');
+        $template = $distribution['id'];
         try {
-            $task = $this->api->post('/vps/'.$name.'/reinstall', [
+            /** @var array{id: int, progress: int, type: string, state: string} */
+            $task = $this->api->post('/vps/'.$name->toString().'/reinstall', [
                 'doNotSendPassword' => true,
                 'templateId' => $template,
-                'sshKey' => [(string) $name],
+                'sshKey' => [$name->toString()],
             ]);
 
             ($this->wait)($name, $task['id']);
         } catch (OvhTaskFailed $e) {
-            throw new BootstrapFailed((string) $name, 0, $e);
+            throw new BootstrapFailed($name->toString(), 0, $e);
         } finally {
-            $this->api->delete('/me/sshKey/'.$name);
+            $this->api->delete('/me/sshKey/'.$name->toString());
         }
     }
 }

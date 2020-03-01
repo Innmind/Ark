@@ -29,9 +29,9 @@ function ovh(
             $api,
             $available = new Forge\Ovh\Available\State($api),
             new Forge\Ovh\Bootstrap\Reinstall($api, $provider, $os->process()),
-            new Forge\Ovh\Dispose\Stop($api, $os->process())
+            new Forge\Ovh\Dispose\Stop($api, $os->process()),
         ),
-        new InstallationArray\Ovh($api, $available)
+        new InstallationArray\Ovh($api, $available),
     );
 }
 
@@ -54,8 +54,8 @@ function scaleway(
             $provide,
             $user,
             $organization,
-            $image
+            $image,
         ),
-        new InstallationArray\Scaleway($servers, $ips)
+        new InstallationArray\Scaleway($servers, $ips),
     );
 }

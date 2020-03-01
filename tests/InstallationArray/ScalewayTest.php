@@ -6,6 +6,7 @@ namespace Tests\Innmind\Ark\InstallationArray;
 use Innmind\Ark\{
     InstallationArray\Scaleway,
     InstallationArray,
+    Installation,
 };
 use Innmind\ScalewaySdk\{
     Authenticated\Servers,
@@ -29,7 +30,7 @@ class ScalewayTest extends TestCase
             $ips = $this->createMock(IPs::class)
         );
         $servers
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('list')
             ->willReturn(Set::of(
                 Server::class,
@@ -74,7 +75,7 @@ class ScalewayTest extends TestCase
                     $ip1,
                     new IP(
                         $ip1,
-                        new Address('127.0.0.1'),
+                        Address::of('127.0.0.1'),
                         $organization,
                         $server1
                     ),
@@ -83,26 +84,32 @@ class ScalewayTest extends TestCase
                     $ip2,
                     new IP(
                         $ip2,
-                        new Address('127.0.0.2'),
+                        Address::of('127.0.0.2'),
                         $organization,
                         $server2
                     ),
                 ],
             ]));
 
-        $this->assertInstanceOf(InstallationArray::class, $array);
-        $this->assertTrue($array->valid());
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $array->current()->name());
-        $this->assertSame('root@127.0.0.1/', (string) $array->current()->location());
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', (string) $array->key());
-        $this->assertNull($array->next());
-        $this->assertTrue($array->valid());
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d8', (string) $array->current()->name());
-        $this->assertSame('root@127.0.0.2/', (string) $array->current()->location());
-        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d8', (string) $array->key());
-        $this->assertNull($array->next());
-        $this->assertFalse($array->valid());
+        $this->assertNull($array->foreach(fn($installation) => $this->assertInstanceOf(
+            Installation::class,
+            $installation,
+        )));
+
+        $installations = $array->reduce(
+            [],
+            function($installations, $installation) {
+                $installations[] = $installation;
+
+                return $installations;
+            },
+        );
+
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7', \current($installations)->name()->toString());
+        $this->assertSame('root@127.0.0.1/', \current($installations)->location()->toString());
+        \next($installations);
+        $this->assertSame('039aafa0-e8d6-40d5-9db5-7f2b6ed443d8', \current($installations)->name()->toString());
+        $this->assertSame('root@127.0.0.2/', \current($installations)->location()->toString());
         $this->assertCount(2, $array);
-        $this->assertNull($array->rewind());
     }
 }

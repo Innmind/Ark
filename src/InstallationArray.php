@@ -5,12 +5,21 @@ namespace Innmind\Ark;
 
 use Innmind\Ark\Installation\Name;
 
-interface InstallationArray extends \Iterator, \Countable
+interface InstallationArray extends \Countable
 {
-    public function current(): Installation;
-    public function key(): Name;
-    public function next(): void;
-    public function rewind(): void;
-    public function valid(): bool;
+    /**
+     * @param callable(Installation): void $function
+     */
+    public function foreach(callable $function): void;
+
+    /**
+     * @template R
+     *
+     * @param R $initial
+     * @param callable(R, Installation): R $reducer
+     *
+     * @return R
+     */
+    public function reduce($initial, callable $reducer);
     public function count(): int;
 }

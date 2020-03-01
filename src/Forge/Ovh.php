@@ -15,14 +15,15 @@ use Innmind\Ark\{
 };
 use Innmind\Url\Url;
 use Innmind\Immutable\Set;
+use function Innmind\Immutable\unwrap;
 use Ovh\Api;
 
 final class Ovh implements Forge
 {
-    private $api;
-    private $available;
-    private $bootstrap;
-    private $dispose;
+    private Api $api;
+    private Available $available;
+    private Bootstrap $bootstrap;
+    private Dispose $dispose;
 
     public function __construct(
         Api $api,
@@ -41,22 +42,25 @@ final class Ovh implements Forge
         //iterate over existing vps and filter the ones "available" as the api
         //doesn't allow to order a new vps on demand, so instead we look for an
         //existing purchased vps that's available
-        $names = Set::of('string', ...$this->api->get('/vps'))->filter(function(string $vps): bool {
+        /** @var list<string> */
+        $vps = $this->api->get('/vps');
+        $names = Set::strings(...$vps)->filter(function(string $vps): bool {
             return ($this->available)(new Name($vps));
         });
+        $names = unwrap($names);
 
         //attempt to bootstrap a new server, if one fails it will attempt to use
         //the next available one
-        while ($names->valid()) {
+        while (\is_string(\current($names))) {
             try {
-                ($this->bootstrap)(new Name($names->current()));
+                ($this->bootstrap)(new Name(\current($names)));
 
                 return new Installation(
-                    new Name($names->current()),
-                    Url::fromString($names->current())
+                    new Name(\current($names)),
+                    Url::of(\current($names)),
                 );
             } catch (RuntimeException $e) {
-                $names->next();
+                \next($names);
             }
         }
 

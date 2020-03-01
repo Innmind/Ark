@@ -13,17 +13,13 @@ use Innmind\ScalewaySdk\{
     Authenticated\IPs,
     Server,
 };
-use Innmind\Url\{
-    Url,
-    NullScheme,
-};
-use Innmind\Immutable\SetInterface;
+use Innmind\Url\Url;
+use Innmind\Immutable\Set;
 
 final class Scaleway implements InstallationArray
 {
-    private $servers;
-    private $ips;
-    private $all;
+    private Servers $servers;
+    private IPs $ips;
 
     public function __construct(Servers $servers, IPs $ips)
     {
@@ -31,37 +27,26 @@ final class Scaleway implements InstallationArray
         $this->ips = $ips;
     }
 
-    public function current(): Installation
+    public function foreach(callable $function): void
     {
-        return new Installation(
-            new Name((string) $this->all()->current()->id()),
-            Url::fromString(
-                'ssh://root@'.$this
-                    ->ips
-                    ->get($this->all()->current()->ip())
-                    ->address()
-            )->withScheme(new NullScheme)
+        $this->all()->foreach(
+            fn(Server $server) => $function($this->bridge($server)),
         );
     }
 
-    public function key(): Name
+    public function reduce($initial, callable $reducer)
     {
-        return $this->current()->name();
-    }
-
-    public function next(): void
-    {
-        $this->all()->next();
-    }
-
-    public function rewind(): void
-    {
-        $this->all = null;
-    }
-
-    public function valid(): bool
-    {
-        return $this->all()->valid();
+        /**
+         * @psalm-suppress MissingParamType
+         * @psalm-suppress MixedArgument
+         */
+        return $this->all()->reduce(
+            $initial,
+            fn($initial, Server $server) => $reducer(
+                $initial,
+                $this->bridge($server),
+            ),
+        );
     }
 
     public function count(): int
@@ -69,9 +54,23 @@ final class Scaleway implements InstallationArray
         return $this->all()->size();
     }
 
-    private function all(): SetInterface
+    private function bridge(Server $server): Installation
     {
-        return $this->all ?? $this->all = $this
+        return new Installation(
+            new Name($server->id()->toString()),
+            Url::of(
+                'ssh://root@'.$this
+                    ->ips
+                    ->get($server->ip())
+                    ->address()
+                    ->toString(),
+            )->withoutScheme(),
+        );
+    }
+
+    private function all(): Set
+    {
+        return $this
             ->servers
             ->list()
             ->filter(static function(Server $server): bool {

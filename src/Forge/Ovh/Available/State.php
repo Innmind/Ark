@@ -11,7 +11,7 @@ use Ovh\Api;
 
 final class State implements Available
 {
-    private $api;
+    private Api $api;
 
     public function __construct(Api $api)
     {
@@ -21,7 +21,7 @@ final class State implements Available
     public function __invoke(Name $name): bool
     {
         try {
-            return $this->api->get('/vps/'.$name)['state'] === 'stopped';
+            return $this->api->get('/vps/'.$name->toString())['state'] === 'stopped';
         } catch (\Throwable $e) {
             return false;
         }

@@ -14,7 +14,7 @@ use Innmind\Ark\{
     Exception\RuntimeException,
     Exception\CantProvideNewInstallation,
 };
-use Innmind\Url\UrlInterface;
+use Innmind\Url\Url;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 
@@ -74,8 +74,8 @@ class OVHTest extends TestCase
         $installation = $forge->new();
 
         $this->assertInstanceOf(Installation::class, $installation);
-        $this->assertSame('baz', (string) $installation->name());
-        $this->assertSame('baz', (string) $installation->location());
+        $this->assertSame('baz', $installation->name()->toString());
+        $this->assertSame('baz', $installation->location()->toString());
     }
 
     public function testThrowWhenNoServer()
@@ -139,7 +139,7 @@ class OVHTest extends TestCase
         );
         $installation = new Installation(
             $name = new Name('foo'),
-            $this->createMock(UrlInterface::class)
+            Url::of('example.com'),
         );
         $dispose
             ->expects($this->once())

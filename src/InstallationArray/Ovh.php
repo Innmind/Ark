@@ -15,9 +15,8 @@ use Ovh\Api;
 
 final class Ovh implements InstallationArray
 {
-    private $api;
-    private $available;
-    private $names;
+    private Api $api;
+    private Available $available;
 
     public function __construct(Api $api, Available $available)
     {
@@ -25,32 +24,30 @@ final class Ovh implements InstallationArray
         $this->available = $available;
     }
 
-    public function current(): Installation
+    public function foreach(callable $function): void
     {
-        return new Installation(
-            new Name($this->names()->current()),
-            Url::fromString($this->names()->current())
+        $this->names()->foreach(static fn(string $name) => $function(new Installation(
+            new Name($name),
+            Url::of($name),
+        )));
+    }
+
+    public function reduce($initial, callable $reducer)
+    {
+        /**
+         * @psalm-suppress MissingParamType
+         * @psalm-suppress MixedArgument
+         */
+        return $this->names()->reduce(
+            $initial,
+            static fn($initial, string $name) => $reducer(
+                $initial,
+                new Installation(
+                    new Name($name),
+                    Url::of($name),
+                ),
+            ),
         );
-    }
-
-    public function key(): Name
-    {
-        return $this->current()->name();
-    }
-
-    public function next(): void
-    {
-        $this->names()->next();
-    }
-
-    public function rewind(): void
-    {
-        $this->names = null;
-    }
-
-    public function valid(): bool
-    {
-        return $this->names()->valid();
     }
 
     public function count(): int
@@ -60,11 +57,10 @@ final class Ovh implements InstallationArray
 
     private function names(): Set
     {
-        return $this->names ?? $this->names = Set::of(
-            'string',
-            ...$this->api->get('/vps')
-        )->filter(function(string $name): bool {
-            return !($this->available)(new Name($name));
-        });
+        /** @var list<string> */
+        $vps = $this->api->get('/vps');
+        return Set::strings(...$vps)->filter(
+            fn(string $name): bool => !($this->available)(new Name($name)),
+        );
     }
 }

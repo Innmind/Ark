@@ -15,8 +15,8 @@ use Ovh\Api;
 
 final class Stop implements Dispose
 {
-    private $api;
-    private $wait;
+    private Api $api;
+    private WaitTaskCompletion $wait;
 
     public function __construct(Api $api, CurrentProcess $process)
     {
@@ -26,12 +26,13 @@ final class Stop implements Dispose
 
     public function __invoke(Name $name): void
     {
-        $task = $this->api->post('/vps/'.$name.'/stop');
+        /** @var array{id: int, progress: int, type: string, state: string} */
+        $task = $this->api->post('/vps/'.$name->toString().'/stop');
 
         try {
             ($this->wait)($name, $task['id']);
         } catch (OvhTaskFailed $e) {
-            throw new InstallationDisposalFailed((string) $name, 0, $e);
+            throw new InstallationDisposalFailed($name->toString(), 0, $e);
         }
     }
 }
