@@ -1,10 +1,8 @@
 # Ark
 
-| `develop` |
-|-----------|
-| [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Ark/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Http/?branch=develop) |
-| [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Ark/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Http/?branch=develop) |
-| [![Build Status](https://scrutinizer-ci.com/g/Innmind/Ark/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Http/build-status/develop) |
+[![Build Status](https://github.com/Innmind/Ark/workflows/CI/badge.svg)](https://github.com/Innmind/Ark/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/Innmind/Ark/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Ark)
+[![Type Coverage](https://shepherd.dev/github/Innmind/Ark/coverage.svg)](https://shepherd.dev/github/Innmind/Ark)
 
 The ark is a simple tool to spinup new servers and trash the ones in service in your infrastructure.
 
