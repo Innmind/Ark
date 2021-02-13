@@ -35,7 +35,7 @@ final class Ovh implements InstallationArray
     public function reduce($initial, callable $reducer)
     {
         /**
-         * @psalm-suppress MissingParamType
+         * @psalm-suppress MissingClosureParamType
          * @psalm-suppress MixedArgument
          */
         return $this->names()->reduce(
@@ -55,6 +55,9 @@ final class Ovh implements InstallationArray
         return $this->names()->size();
     }
 
+    /**
+     * @return Set<string>
+     */
     private function names(): Set
     {
         /** @var list<string> */
