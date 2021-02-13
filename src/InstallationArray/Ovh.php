@@ -62,6 +62,7 @@ final class Ovh implements InstallationArray
     {
         /** @var list<string> */
         $vps = $this->api->get('/vps');
+
         return Set::strings(...$vps)->filter(
             fn(string $name): bool => !($this->available)(new Name($name)),
         );

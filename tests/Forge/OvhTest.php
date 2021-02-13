@@ -18,7 +18,7 @@ use Innmind\Url\Url;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 
-class OVHTest extends TestCase
+class OvhTest extends TestCase
 {
     public function testInterface()
     {

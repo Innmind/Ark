@@ -55,7 +55,7 @@ class ReinstallTest extends TestCase
                     [
                         'key' => 'my ssh key',
                         'keyName' => 'foo',
-                    ]
+                    ],
                 ],
                 [
                     '/vps/foo/reinstall',
@@ -63,7 +63,7 @@ class ReinstallTest extends TestCase
                         'doNotSendPassword' => true,
                         'templateId' => 143979,
                         'sshKey' => ['foo'],
-                    ]
+                    ],
                 ],
             )
             ->will($this->onConsecutiveCalls(
@@ -97,9 +97,9 @@ class ReinstallTest extends TestCase
                         'pl',
                         'pt',
                         'it',
-                        'nl'
+                        'nl',
                     ],
-                    'distribution' => 'debian9'
+                    'distribution' => 'debian9',
                 ],
                 ['state' => 'doing'],
                 ['state' => 'done'],
@@ -152,7 +152,7 @@ class ReinstallTest extends TestCase
                     [
                         'key' => 'my ssh key',
                         'keyName' => 'foo',
-                    ]
+                    ],
                 ],
                 [
                     '/vps/foo/reinstall',
@@ -160,7 +160,7 @@ class ReinstallTest extends TestCase
                         'doNotSendPassword' => true,
                         'templateId' => 143979,
                         'sshKey' => ['foo'],
-                    ]
+                    ],
                 ],
             )
             ->will($this->onConsecutiveCalls(
@@ -193,9 +193,9 @@ class ReinstallTest extends TestCase
                         'pl',
                         'pt',
                         'it',
-                        'nl'
+                        'nl',
                     ],
-                    'distribution' => 'debian9'
+                    'distribution' => 'debian9',
                 ],
                 ['state' => 'error']
             ));
@@ -233,7 +233,7 @@ class ReinstallTest extends TestCase
                     [
                         'key' => 'my ssh key',
                         'keyName' => 'foo',
-                    ]
+                    ],
                 ],
                 [
                     '/vps/foo/reinstall',
@@ -241,7 +241,7 @@ class ReinstallTest extends TestCase
                         'doNotSendPassword' => true,
                         'templateId' => 143979,
                         'sshKey' => ['foo'],
-                    ]
+                    ],
                 ],
             )
             ->will($this->onConsecutiveCalls(
@@ -274,9 +274,9 @@ class ReinstallTest extends TestCase
                         'pl',
                         'pt',
                         'it',
-                        'nl'
+                        'nl',
                     ],
-                    'distribution' => 'debian9'
+                    'distribution' => 'debian9',
                 ],
                 ['state' => 'cancelled'],
             ));

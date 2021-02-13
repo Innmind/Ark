@@ -8,7 +8,6 @@ use function Innmind\Ark\{
     scaleway,
 };
 use Innmind\Ark\Ark;
-use Innmind\Url\Path;
 use Innmind\OperatingSystem\{
     OperatingSystem,
     CurrentProcess,

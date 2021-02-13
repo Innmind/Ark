@@ -48,6 +48,7 @@ final class Reinstall implements Bootstrap
         /** @var array{id: int, bitFormat: int, name: string, locale: string, availableLanguage: list<string>, distribution: string} */
         $distribution = $this->api->get('/vps/'.$name->toString().'/distribution');
         $template = $distribution['id'];
+
         try {
             /** @var array{id: int, progress: int, type: string, state: string} */
             $task = $this->api->post('/vps/'.$name->toString().'/reinstall', [
