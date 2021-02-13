@@ -12,41 +12,32 @@ use Innmind\OperatingSystem\CurrentProcess;
 use Innmind\TimeContinuum\Earth\Period\Second;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
-use Eris\{
-    Generator,
-    TestTrait,
+use Innmind\BlackBox\{
+    PHPUnit\BlackBox,
+    Set,
 };
 
 class WaitTaskCompletionTest extends TestCase
 {
-    use TestTrait;
+    use BlackBox;
 
     public function testInvokation()
     {
         $this
-            ->forAll(Generator\string(), Generator\pos())
-            ->when(static function(string $string): bool {
-                return $string !== '';
-            })
+            ->forAll(Set\Strings::atLeast(1), Set\Integers::above(0))
             ->then(function(string $name, int $task): void {
                 $wait = new WaitTaskCompletion(
                     $api = $this->createMock(Api::class),
                     $process = $this->createMock(CurrentProcess::class)
                 );
                 $api
-                    ->expects($this->at(0))
+                    ->expects($this->exactly(2))
                     ->method('get')
                     ->with("/vps/$name/tasks/$task")
-                    ->willReturn([
-                        'state' => 'doing',
-                    ]);
-                $api
-                    ->expects($this->at(1))
-                    ->method('get')
-                    ->with("/vps/$name/tasks/$task")
-                    ->willReturn([
-                        'state' => 'done',
-                    ]);
+                    ->will($this->onConsecutiveCalls(
+                        ['state' => 'doing'],
+                        ['state' => 'done'],
+                    ));
                 $process
                     ->expects($this->exactly(2))
                     ->method('halt')
@@ -63,7 +54,7 @@ class WaitTaskCompletionTest extends TestCase
             $this->createMock(CurrentProcess::class)
         );
         $api
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn([
@@ -82,7 +73,7 @@ class WaitTaskCompletionTest extends TestCase
             $this->createMock(CurrentProcess::class)
         );
         $api
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn([

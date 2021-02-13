@@ -27,20 +27,14 @@ class StateTest extends TestCase
             $api = $this->createMock(Api::class)
         );
         $api
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('get')
             ->with('/vps/foo')
-            ->willReturn(['state' => 'stopped']);
-        $api
-            ->expects($this->at(1))
-            ->method('get')
-            ->with('/vps/foo')
-            ->willReturn(['state' => 'running']);
-        $api
-            ->expects($this->at(2))
-            ->method('get')
-            ->with('/vps/foo')
-            ->will($this->throwException(new \Exception));
+            ->will($this->onConsecutiveCalls(
+                ['state' => 'stopped'],
+                ['state' => 'running'],
+                $this->throwException(new \Exception)
+            ));
 
         $this->assertTrue($state(new Name('foo')));
         $this->assertFalse($state(new Name('foo')));

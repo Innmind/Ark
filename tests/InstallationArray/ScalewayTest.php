@@ -98,7 +98,7 @@ class ScalewayTest extends TestCase
 
         $installations = $array->reduce(
             [],
-            function($installations, $installation) {
+            static function($installations, $installation) {
                 $installations[] = $installation;
 
                 return $installations;

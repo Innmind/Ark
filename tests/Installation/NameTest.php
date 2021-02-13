@@ -8,22 +8,19 @@ use Innmind\Ark\{
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
-use Eris\{
-    TestTrait,
-    Generator,
+use Innmind\BlackBox\{
+    PHPUnit\BlackBox,
+    Set,
 };
 
 class NameTest extends TestCase
 {
-    use TestTrait;
+    use BlackBox;
 
     public function testAcceptAnyNonEmptyString()
     {
         $this
-            ->forAll(Generator\string())
-            ->when(static function(string $string): bool {
-                return $string !== '';
-            })
+            ->forAll(Set\Strings::atLeast(1))
             ->then(function(string $string): void {
                 $this->assertSame($string, (new Name($string))->toString());
             });

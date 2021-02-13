@@ -47,65 +47,65 @@ class ReinstallTest extends TestCase
                 new PublicKey('my ssh key')
             ));
         $api
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('post')
-            ->with(
-                '/me/sshKey',
+            ->withConsecutive(
                 [
-                    'key' => 'my ssh key',
-                    'keyName' => 'foo',
-                ]
-            );
-        $api
-            ->expects($this->at(1))
-            ->method('get')
-            ->with('/vps/foo/distribution')
-            ->willReturn([
-                'bitFormat' => 64,
-                'name' => 'Debian 9 (Stretch)',
-                'id' => 143979,
-                'locale' => 'en',
-                'availableLanguage' => [
-                    'en',
-                    'fr',
-                    'es',
-                    'de',
-                    'pl',
-                    'pt',
-                    'it',
-                    'nl'
+                    '/me/sshKey',
+                    [
+                        'key' => 'my ssh key',
+                        'keyName' => 'foo',
+                    ],
                 ],
-                'distribution' => 'debian9'
-            ]);
-        $api
-            ->expects($this->at(2))
-            ->method('post')
-            ->with(
-                '/vps/foo/reinstall',
                 [
-                    'doNotSendPassword' => true,
-                    'templateId' => 143979,
-                    'sshKey' => ['foo'],
-                ]
+                    '/vps/foo/reinstall',
+                    [
+                        'doNotSendPassword' => true,
+                        'templateId' => 143979,
+                        'sshKey' => ['foo'],
+                    ],
+                ],
             )
-            ->willReturn([
-                'progress' => 0,
-                'id' => 42,
-                'type' => 'reinstallVm',
-                'state' => 'todo',
-            ]);
+            ->will($this->onConsecutiveCalls(
+                null,
+                [
+                    'progress' => 0,
+                    'id' => 42,
+                    'type' => 'reinstallVm',
+                    'state' => 'todo',
+                ]
+            ));
         $api
-            ->expects($this->at(3))
+            ->expects($this->exactly(3))
             ->method('get')
-            ->with('/vps/foo/tasks/42')
-            ->willReturn(['state' => 'doing']);
+            ->withConsecutive(
+                ['/vps/foo/distribution'],
+                ['/vps/foo/tasks/42'],
+                ['/vps/foo/tasks/42'],
+            )
+            ->will($this->onConsecutiveCalls(
+                [
+                    'bitFormat' => 64,
+                    'name' => 'Debian 9 (Stretch)',
+                    'id' => 143979,
+                    'locale' => 'en',
+                    'availableLanguage' => [
+                        'en',
+                        'fr',
+                        'es',
+                        'de',
+                        'pl',
+                        'pt',
+                        'it',
+                        'nl',
+                    ],
+                    'distribution' => 'debian9',
+                ],
+                ['state' => 'doing'],
+                ['state' => 'done'],
+            ));
         $api
-            ->expects($this->at(4))
-            ->method('get')
-            ->with('/vps/foo/tasks/42')
-            ->willReturn(['state' => 'done']);
-        $api
-            ->expects($this->at(5))
+            ->expects($this->once())
             ->method('delete')
             ->with('/me/sshKey/foo');
 
@@ -144,60 +144,63 @@ class ReinstallTest extends TestCase
                 new PublicKey('my ssh key')
             ));
         $api
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('post')
-            ->with(
-                '/me/sshKey',
+            ->withConsecutive(
                 [
-                    'key' => 'my ssh key',
-                    'keyName' => 'foo',
-                ]
-            );
-        $api
-            ->expects($this->at(1))
-            ->method('get')
-            ->with('/vps/foo/distribution')
-            ->willReturn([
-                'bitFormat' => 64,
-                'name' => 'Debian 9 (Stretch)',
-                'id' => 143979,
-                'locale' => 'en',
-                'availableLanguage' => [
-                    'en',
-                    'fr',
-                    'es',
-                    'de',
-                    'pl',
-                    'pt',
-                    'it',
-                    'nl'
+                    '/me/sshKey',
+                    [
+                        'key' => 'my ssh key',
+                        'keyName' => 'foo',
+                    ],
                 ],
-                'distribution' => 'debian9'
-            ]);
-        $api
-            ->expects($this->at(2))
-            ->method('post')
-            ->with(
-                '/vps/foo/reinstall',
                 [
-                    'doNotSendPassword' => true,
-                    'templateId' => 143979,
-                    'sshKey' => ['foo'],
-                ]
+                    '/vps/foo/reinstall',
+                    [
+                        'doNotSendPassword' => true,
+                        'templateId' => 143979,
+                        'sshKey' => ['foo'],
+                    ],
+                ],
             )
-            ->willReturn([
-                'progress' => 0,
-                'id' => 42,
-                'type' => 'reinstallVm',
-                'state' => 'todo',
-            ]);
+            ->will($this->onConsecutiveCalls(
+                null,
+                [
+                    'progress' => 0,
+                    'id' => 42,
+                    'type' => 'reinstallVm',
+                    'state' => 'todo',
+                ],
+            ));
         $api
-            ->expects($this->at(3))
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with('/vps/foo/tasks/42')
-            ->willReturn(['state' => 'error']);
+            ->withConsecutive(
+                ['/vps/foo/distribution'],
+                ['/vps/foo/tasks/42'],
+            )
+            ->will($this->onConsecutiveCalls(
+                [
+                    'bitFormat' => 64,
+                    'name' => 'Debian 9 (Stretch)',
+                    'id' => 143979,
+                    'locale' => 'en',
+                    'availableLanguage' => [
+                        'en',
+                        'fr',
+                        'es',
+                        'de',
+                        'pl',
+                        'pt',
+                        'it',
+                        'nl',
+                    ],
+                    'distribution' => 'debian9',
+                ],
+                ['state' => 'error']
+            ));
         $api
-            ->expects($this->at(4))
+            ->expects($this->once())
             ->method('delete')
             ->with('/me/sshKey/foo');
 
@@ -222,60 +225,63 @@ class ReinstallTest extends TestCase
                 new PublicKey('my ssh key')
             ));
         $api
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('post')
-            ->with(
-                '/me/sshKey',
+            ->withConsecutive(
                 [
-                    'key' => 'my ssh key',
-                    'keyName' => 'foo',
-                ]
-            );
-        $api
-            ->expects($this->at(1))
-            ->method('get')
-            ->with('/vps/foo/distribution')
-            ->willReturn([
-                'bitFormat' => 64,
-                'name' => 'Debian 9 (Stretch)',
-                'id' => 143979,
-                'locale' => 'en',
-                'availableLanguage' => [
-                    'en',
-                    'fr',
-                    'es',
-                    'de',
-                    'pl',
-                    'pt',
-                    'it',
-                    'nl'
+                    '/me/sshKey',
+                    [
+                        'key' => 'my ssh key',
+                        'keyName' => 'foo',
+                    ],
                 ],
-                'distribution' => 'debian9'
-            ]);
-        $api
-            ->expects($this->at(2))
-            ->method('post')
-            ->with(
-                '/vps/foo/reinstall',
                 [
-                    'doNotSendPassword' => true,
-                    'templateId' => 143979,
-                    'sshKey' => ['foo'],
-                ]
+                    '/vps/foo/reinstall',
+                    [
+                        'doNotSendPassword' => true,
+                        'templateId' => 143979,
+                        'sshKey' => ['foo'],
+                    ],
+                ],
             )
-            ->willReturn([
-                'progress' => 0,
-                'id' => 42,
-                'type' => 'reinstallVm',
-                'state' => 'todo',
-            ]);
+            ->will($this->onConsecutiveCalls(
+                null,
+                [
+                    'progress' => 0,
+                    'id' => 42,
+                    'type' => 'reinstallVm',
+                    'state' => 'todo',
+                ],
+            ));
         $api
-            ->expects($this->at(3))
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with('/vps/foo/tasks/42')
-            ->willReturn(['state' => 'cancelled']);
+            ->withConsecutive(
+                ['/vps/foo/distribution'],
+                ['/vps/foo/tasks/42'],
+            )
+            ->will($this->onConsecutiveCalls(
+                [
+                    'bitFormat' => 64,
+                    'name' => 'Debian 9 (Stretch)',
+                    'id' => 143979,
+                    'locale' => 'en',
+                    'availableLanguage' => [
+                        'en',
+                        'fr',
+                        'es',
+                        'de',
+                        'pl',
+                        'pt',
+                        'it',
+                        'nl',
+                    ],
+                    'distribution' => 'debian9',
+                ],
+                ['state' => 'cancelled'],
+            ));
         $api
-            ->expects($this->at(4))
+            ->expects($this->once())
             ->method('delete')
             ->with('/me/sshKey/foo');
 

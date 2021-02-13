@@ -37,7 +37,7 @@ final class Scaleway implements InstallationArray
     public function reduce($initial, callable $reducer)
     {
         /**
-         * @psalm-suppress MissingParamType
+         * @psalm-suppress MissingClosureParamType
          * @psalm-suppress MixedArgument
          */
         return $this->all()->reduce(
@@ -68,6 +68,9 @@ final class Scaleway implements InstallationArray
         );
     }
 
+    /**
+     * @return Set<Server>
+     */
     private function all(): Set
     {
         return $this

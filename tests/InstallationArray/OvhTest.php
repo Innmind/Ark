@@ -31,7 +31,8 @@ class OvhTest extends TestCase
         $ovh = new Ovh(
             $api = $this->createMock(Api::class),
             new class implements Available {
-                public function __invoke(Name $name): bool {
+                public function __invoke(Name $name): bool
+                {
                     switch ($name->toString()) {
                         case 'available1':
                         case 'available2':
@@ -64,7 +65,7 @@ class OvhTest extends TestCase
 
         $installations = $ovh->reduce(
             [],
-            function($installations, $installation) {
+            static function($installations, $installation) {
                 $installations[] = $installation;
 
                 return $installations;

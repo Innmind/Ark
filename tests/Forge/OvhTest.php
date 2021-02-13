@@ -18,7 +18,7 @@ use Innmind\Url\Url;
 use Ovh\Api;
 use PHPUnit\Framework\TestCase;
 
-class OVHTest extends TestCase
+class OvhTest extends TestCase
 {
     public function testInterface()
     {
@@ -47,29 +47,24 @@ class OVHTest extends TestCase
             ->with('/vps')
             ->willReturn(['foo', 'bar', 'baz']);
         $available
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('__invoke')
-            ->with(new Name('foo'))
-            ->willReturn(true);
-        $available
-            ->expects($this->at(1))
-            ->method('__invoke')
-            ->with(new Name('bar'))
-            ->willReturn(false);
-        $available
-            ->expects($this->at(2))
-            ->method('__invoke')
-            ->with(new Name('baz'))
-            ->willReturn(true);
+            ->withConsecutive(
+                [new Name('foo')],
+                [new Name('bar')],
+                [new Name('baz')],
+            )
+            ->will($this->onConsecutiveCalls(true, false, true));
         $bootstrap
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('__invoke')
-            ->with(new Name('foo'))
-            ->will($this->throwException(new RuntimeException));
-        $bootstrap
-            ->expects($this->at(1))
-            ->method('__invoke')
-            ->with(new Name('baz'));
+            ->withConsecutive(
+                [new Name('foo')],
+                [new Name('baz')],
+            )
+            ->will($this->onConsecutiveCalls(
+                $this->throwException(new RuntimeException),
+            ));
 
         $installation = $forge->new();
 
