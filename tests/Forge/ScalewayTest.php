@@ -76,7 +76,7 @@ class ScalewayTest extends TestCase
             ->method('list')
             ->willReturn(Set::of(IP::class));
         $servers
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('create')
             ->with(
                 $this->isInstanceOf(Server\Name::class),
@@ -95,28 +95,26 @@ class ScalewayTest extends TestCase
                 Set::of(Volume\Id::class)
             ));
         $servers
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('execute')
             ->with($server->id(), Server\Action::powerOn());
         $servers
-            ->expects($this->at(2))
+            ->expects($this->exactly(2))
             ->method('get')
             ->with($server->id())
-            ->willReturn($server);
-        $servers
-            ->expects($this->at(3))
-            ->method('get')
-            ->with($server->id())
-            ->willReturn($server = new Server(
-                new Server\Id('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7'),
-                $organization,
-                new Server\Name('foo'),
-                $image,
-                $ip = new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
-                Server\State::running(),
-                Set::of(Server\Action::class),
-                Set::of('string'),
-                Set::of(Volume\Id::class)
+            ->will($this->onConsecutiveCalls(
+                $server,
+                $server = new Server(
+                    new Server\Id('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7'),
+                    $organization,
+                    new Server\Name('foo'),
+                    $image,
+                    $ip = new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
+                    Server\State::running(),
+                    Set::of(Server\Action::class),
+                    Set::of('string'),
+                    Set::of(Volume\Id::class)
+                ),
             ));
         $process
             ->expects($this->exactly(2))
@@ -204,7 +202,7 @@ class ScalewayTest extends TestCase
                 )
             ));
         $servers
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('create')
             ->with(
                 $this->isInstanceOf(Server\Name::class),
@@ -223,28 +221,26 @@ class ScalewayTest extends TestCase
                 Set::of(Volume\Id::class)
             ));
         $servers
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('execute')
             ->with($server->id(), Server\Action::powerOn());
         $servers
-            ->expects($this->at(2))
+            ->expects($this->exactly(2))
             ->method('get')
             ->with($server->id())
-            ->willReturn($server);
-        $servers
-            ->expects($this->at(3))
-            ->method('get')
-            ->with($server->id())
-            ->willReturn($server = new Server(
-                new Server\Id('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7'),
-                $organization,
-                new Server\Name('foo'),
-                $image,
-                $ip = new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
-                Server\State::running(),
-                Set::of(Server\Action::class),
-                Set::of('string'),
-                Set::of(Volume\Id::class)
+            ->will($this->onConsecutiveCalls(
+                $server,
+                $server = new Server(
+                    new Server\Id('039aafa0-e8d6-40d5-9db5-7f2b6ed443d7'),
+                    $organization,
+                    new Server\Name('foo'),
+                    $image,
+                    $ip = new IP\Id('6fb83d24-6a2a-4c76-8304-7b9212b40865'),
+                    Server\State::running(),
+                    Set::of(Server\Action::class),
+                    Set::of('string'),
+                    Set::of(Volume\Id::class)
+                ),
             ));
         $process
             ->expects($this->exactly(2))

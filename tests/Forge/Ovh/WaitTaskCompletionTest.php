@@ -31,19 +31,13 @@ class WaitTaskCompletionTest extends TestCase
                     $process = $this->createMock(CurrentProcess::class)
                 );
                 $api
-                    ->expects($this->at(0))
+                    ->expects($this->exactly(2))
                     ->method('get')
                     ->with("/vps/$name/tasks/$task")
-                    ->willReturn([
-                        'state' => 'doing',
-                    ]);
-                $api
-                    ->expects($this->at(1))
-                    ->method('get')
-                    ->with("/vps/$name/tasks/$task")
-                    ->willReturn([
-                        'state' => 'done',
-                    ]);
+                    ->will($this->onConsecutiveCalls(
+                        ['state' => 'doing'],
+                        ['state' => 'done'],
+                    ));
                 $process
                     ->expects($this->exactly(2))
                     ->method('halt')
@@ -60,7 +54,7 @@ class WaitTaskCompletionTest extends TestCase
             $this->createMock(CurrentProcess::class)
         );
         $api
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn([
@@ -79,7 +73,7 @@ class WaitTaskCompletionTest extends TestCase
             $this->createMock(CurrentProcess::class)
         );
         $api
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with('/vps/foo/tasks/42')
             ->willReturn([
