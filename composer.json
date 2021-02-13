@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/Ark/issues"
     },
     "require": {
-        "php": "~7.4",
+        "php": "~7.4|~8.0",
         "innmind/url": "~3.3",
         "innmind/immutable": "~3.5",
         "ovh/ovh": "^2.0",
